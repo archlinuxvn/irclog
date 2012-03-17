@@ -15,7 +15,7 @@ HOW IT WORKS
 
 REQUIREMENTS
 
-  The irssi settings must use a special timestamp format. In `irss`, try
+  The irssi settings must use a special timestamp format. In `irssi`, try
               /SET log_timestamp = %Y-%m-%d %H:%S
 
   (You should include an extra space at the end of the command.)
