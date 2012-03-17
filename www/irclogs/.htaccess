@@ -1,0 +1,6 @@
+AddDefaultCharset utf-8
+
+AuthType Basic
+AuthName "Username is foobar, pasword is foobar"
+AuthUserFile /home/archlinuxvn/archlinuxvn.tuxfamily.org-web/htdocs/irclogs/.htpasswd
+Require valid-user
