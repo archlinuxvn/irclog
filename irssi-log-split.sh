@@ -7,12 +7,11 @@
 # Date   : 2012 Mar 17th
 # License: Fair license
 
-
-_D_OUTPUT="./archives/"                    # output directory
-_F_OUTPUT="./archives/output.txt"          # output file
 _YESTERDAY="$(date -d yesterday +"%Y-%m-%d")"
+_D_OUTPUT="./archives/"                    # output directory
+_F_OUTPUT="$_D_OUTPUT/$_YESTERDAY.txt"     # output file
 
-if [[ -f "$_D_OUTPUT/$_YESTERDAY.txt" ]]; then
+if [[ -f "$_F_OUTPUT" ]]; then
   echo >&2 ":: The file $_D_OUTPUT/$_YESTERDAY.txt does exist"
   echo >&2 ":: You must examine and remove that file to continue"
   echo >&2 ":: The program now exit (0)."
