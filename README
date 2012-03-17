@@ -1,0 +1,3 @@
+Convert IRC channel's logs to web format
+
+See `./irssi-log-split.sh --help` for more details
