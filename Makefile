@@ -20,11 +20,12 @@ tuxfamily:                         # upload web logs to tuxfamily server
 tidylog:                       # convert raw logs file into the web form
 	@./log-tidy.sh
 
-archives/archlinuxvn.log.gz::               # download raw logs from bot
+archlinuxvn.log::                           # uncompress gzip-ed archive
+	@-cd archives && gunzip archlinuxvn.log.gz
+
+archives/archlinuxvn.log.gz:: archlinuxvn.log   # download logs from bot
 	@echo ":: Download the files from remote and compress it"
-	@cd archives \
-		&& gunzip archlinuxvn.log.gz \
-		&& rsync -rapv $(_RF_BOT_LOG) ./archlinuxvn.log
+	@cd archives && rsync -rapv $(_RF_BOT_LOG) ./archlinuxvn.log
 	@cd ./archives && gzip archlinuxvn.log
 
 log-split: archives/archlinuxvn.log.gz
