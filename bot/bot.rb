@@ -29,6 +29,10 @@ bot = Cinch::Bot.new do
     c.plugins.plugins = [Hello]
   end
 
+  on :message, /([^ ]+) \[(.+)@(.+)\] entered the room/ do |m, nick, user, host|
+    m.reply "Hello, #{nick}. You come from #{host} using username = #{user}."
+  end
+
   on :message, /hello[\t ,]*([^\t ]+)/i do |m, text|
     if text.match("archl0n0xvn")
       m.reply "Hello, #{m.user.nick}"
@@ -41,18 +45,13 @@ bot = Cinch::Bot.new do
     m.reply "Hello, #{m.user.nick}"
   end
 
-  on :message, /([^ ]+) \[.*\] entered the room./ do |m, user|
-    m.reply "Hello, #{user}"
-  end
-
-  on :message, /vcl/i do |m, text|
+  on :message, /vcl/i do |m|
     m.reply "#{m.user.nick}: ba.n la.i du`ng Vcl de^? xem ph1m chon^'ng my~ a?"
   end
 
-#  on :message, /^!msg (.+?) (.+)/ do |m, who, text|
-#    User(who).send text
-#  end
-#
+  on :message, /^:(.+)!(.+)@(.+) JOIN #archlinuxvn/ do |m, nick, user, host|
+    m.reply "Hello, #{nick}. You come from #{host}. Are you #{user}?"
+  end
 
   helpers do
     def shorten(url)
