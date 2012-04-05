@@ -1,2 +1,4 @@
-htpasswd
-www/irclogs/.htpasswd
+*htpasswd
+logger/www/irclogs/.htpasswd
+logger/www/irclogs/20*
+logger/archives/
