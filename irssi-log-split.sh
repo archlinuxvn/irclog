@@ -8,11 +8,12 @@
 # License: Fair license
 
 _YESTERDAY="$(date -d yesterday +"%Y-%m-%d")"
+_DATE="${DATE:-$_YESTERDAY}"
 _D_OUTPUT="./archives/"                    # output directory
-_F_OUTPUT="$_D_OUTPUT/$_YESTERDAY.txt"     # output file
+_F_OUTPUT="$_D_OUTPUT/$_DATE.txt"     # output file
 
 if [[ -f "$_F_OUTPUT" ]]; then
-  echo >&2 ":: The file $_D_OUTPUT/$_YESTERDAY.txt does exist"
+  echo >&2 ":: The file $_D_OUTPUT/$_DATE.txt does exist"
   echo >&2 ":: You must examine and remove that file to continue"
   echo >&2 ":: The program now exit (0)."
   exit 0
@@ -20,6 +21,6 @@ fi
 
 # list all days
 cat \
-  | grep "^$_YESTERDAY " \
-  | sed -e "s#^$_YESTERDAY ##g" \
+  | grep "^$_DATE " \
+  | sed -e "s#^$_DATE ##g" \
   > $_F_OUTPUT
