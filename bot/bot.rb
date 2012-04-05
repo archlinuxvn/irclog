@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
 
+# Purpose: Provide simple bot for #archlinuxvn
+# Author : Anh K. Huynh <@archlinuxvn>
+# License: Fair license
+# Date   : 2012 April 05
+
 require 'rubygems'
 require 'cinch'
 require 'uri'
@@ -36,7 +41,7 @@ bot = Cinch::Bot.new do
     m.reply "Hello, #{m.user.nick}"
   end
 
-  on :message, /^([^ ]+).*entered the room./ do |m, user|
+  on :message, /([^ ]+) \[.*\] entered the room./ do |m, user|
     m.reply "Hello, #{user}"
   end
 
