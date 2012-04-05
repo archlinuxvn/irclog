@@ -1,0 +1,21 @@
+DESCRIPTION
+
+  Convert IRC channel's logs to web format
+
+  See `./irssi-log-split.sh --help` for more details
+
+HOW IT WORKS
+
+  See `Makefile::daily` and `make default`. The steps are
+
+    - download the big log file from the bot server
+    - split the log file into parts (actually, only get yesterday logs)
+    - filter the logs and transform the log files into readable format
+    - upload the output to remote servers
+
+REQUIREMENTS
+
+  The irssi settings must use a special timestamp format. In `irssi`, try
+              /SET log_timestamp = %Y-%m-%d %H:%S
+
+  (You should include an extra space at the end of the command.)
