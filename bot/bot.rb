@@ -81,10 +81,10 @@ bot = Cinch::Bot.new do
 
   on :message, /^(!|archl0n0xvn: )info/ do |m|
     m.reply "ArchLinuxVn aka Vietnamese Groups of ArchLinux Users"
-    m.reply " * irc channel  #archlinuxvn on irc.freenode.net"
-    m.reply " * homepage     http://archlinuxvn.tuxfamily.org/"
+    m.reply " * irc channel #archlinuxvn on irc.freenode.net"
+    m.reply " * homepage http://archlinuxvn.tuxfamily.org/"
     m.reply " * mailing list http://groups.google.com/group/archlinuxvn"
-    m.reply " * source code  http://github.com/archlinuxvn/"
+    m.reply " * source code http://github.com/archlinuxvn/"
   end
 
   on :message, /^(!|archl0n0xvn: )help/ do |m|
