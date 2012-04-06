@@ -4,11 +4,14 @@
 # Author : Anh K. Huynh <@archlinuxvn>
 # License: Fair license
 # Date   : 2012 April 05
+# NOTE   : the intial code is based on Cinch example
 
 require 'rubygems'
 require 'cinch'
 require 'uri'
+require 'open-uri'
 
+# FIXME: Don't say hello too much
 class Hello
   include Cinch::Plugin
 
@@ -29,11 +32,21 @@ bot = Cinch::Bot.new do
     c.plugins.plugins = [Hello]
   end
 
+  # Say hello when someone has logged in
+
+  # FIXME: This doesn't work
   on :message, /([^ ]+) \[(.+)@(.+)\] entered the room/ do |m, nick, user, host|
     m.reply "Hello, #{nick}. You come from #{host} using username = #{user}."
   end
 
-  on :message, /hello[\t ,]*([^\t ]+)/i do |m, text|
+  # FIXME: This doesn't work
+  on :message, /^:(.+)!(.+)@(.+) JOIN #archlinuxvn/ do |m, nick, user, host|
+    m.reply "Hello, #{nick}. You come from #{host}. Are you #{user}?"
+  end
+
+  # Say another hello to follow a previous Hello message
+  # If A says Hi to B, the bot also says Hi to B (unless B is the bot itself)
+  on :message, /^hello[\t ,]*([^\t ]+)/i do |m, text|
     if text.match("archl0n0xvn")
       m.reply "Hello, #{m.user.nick}"
     else
@@ -41,18 +54,22 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :message, /archl0n0xvn: hello.*/i do |m|
-    m.reply "Hello, #{m.user.nick}"
+  # Same as above, with another form.
+  # FIXME: Why not support two patterns in the same block?
+  on :message, /^([^ ]: hello)/i do |m, nick|
+    if nick.match("archl0n0xvn")
+      m.reply "Hello, #{m.user.nick}"
+    else
+      m.reply "Hello, #{nick}"
+    end
   end
 
-  on :message, /vcl/i do |m|
-    m.reply "#{m.user.nick}: ba.n la.i du`ng Vcl de^? xem ph1m chon^'ng my~ a?"
+  # Sensored words
+  on :message, /(vcl|wtf|sh[1i]t|f.ck|d?k)/i do |m, text|
+    m.reply "#{m.user.nick}: take it easy. don't say #{text}"
   end
 
-  on :message, /^:(.+)!(.+)@(.+) JOIN #archlinuxvn/ do |m, nick, user, host|
-    m.reply "Hello, #{nick}. You come from #{host}. Are you #{user}?"
-  end
-
+  # A simple helper
   helpers do
     def shorten(url)
       url = open("http://tinyurl.com/api-create.php?url=#{URI.escape(url)}").read
