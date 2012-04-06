@@ -4,7 +4,7 @@
 # Author : Anh K. Huynh <@archlinuxvn>
 # License: Fair license
 # Date   : 2012 April 05
-# NOTE   : the intial code is based on Cinch example
+# NOTE   : the initial code is based on Cinch example
 
 require 'rubygems'
 require 'cinch'
