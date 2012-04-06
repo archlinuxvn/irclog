@@ -89,6 +89,19 @@ class IcyCmdTinyURL
   end
 end
 
+# Micesslaneous commands to interact with Arch wiki, forum,...
+class IcyCmdArchStuff
+  include Cinch::Plugin
+
+  listen_to :message
+
+  def listen(m)
+    if gs = m.message.match(/^!arch (.+)/)
+      m.reply "https://wiki.archlinux.org/index.php/Special:Search/#{gs[1].strip}"
+    end
+  end
+end
+
 # Provide basic commands
 class IcyCmdBasic
   include Cinch::Plugin
@@ -104,7 +117,7 @@ class IcyCmdBasic
       m.reply " * source code http://github.com/archlinuxvn/"
     elsif m.message.match(/^!help/)
       m.reply "To send command, use !command."
-      m.reply "Available commands: info, help, tinyurl"
+      m.reply "Available commands: info, help, tinyurl, arch"
       m.reply "The bot will say hello sometimes."
       m.reply "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog"
     end
@@ -139,6 +152,7 @@ bot = Cinch::Bot.new do
         IcyUserMonitor,
         IcyCmdTinyURL,
         IcyCmdBasic,
+        IcyCmdArchStuff,
       ]
   end
 end
