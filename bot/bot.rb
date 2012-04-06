@@ -98,6 +98,9 @@ class IcyCmdArchStuff
   def listen(m)
     if gs = m.message.match(/^!arch (.+)/)
       m.reply "https://wiki.archlinux.org/index.php/Special:Search/#{gs[1].strip}"
+    elsif gs = m.message.match(/!give ([^ ]+) wiki (.+)/)
+      someone, wiki = gs[1].strip, gs[2].strip
+      m.reply "#{someone}: https://wiki.archlinux.org/index.php/Special:Search/#{wiki}"
     end
   end
 end
