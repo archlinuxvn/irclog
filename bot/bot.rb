@@ -65,7 +65,7 @@ bot = Cinch::Bot.new do
   end
 
   # Sensored words
-  on :message, /(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)/i do |m, text|
+  on :message, /\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i do |m, text|
     m.reply "#{m.user.nick}: take it easy. don't say #{text}"
   end
 
@@ -79,7 +79,7 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :message, /^archl0n0xvn: info/ do |m|
+  on :message, /^(!|archl0n0xvn: )info/ do |m|
     m.reply "ArchLinuxVn aka Vietnamese Groups of ArchLinux Users"
     m.reply " * irc channel  #archlinuxvn on irc.freenode.net"
     m.reply " * homepage     http://archlinuxvn.tuxfamily.org/"
@@ -87,16 +87,17 @@ bot = Cinch::Bot.new do
     m.reply " * source code  http://github.com/archlinuxvn/"
   end
 
-  on :message, /^archl0n0xvn: help/ do |m|
+  on :message, /^(!|archl0n0xvn: )help/ do |m|
     m.reply "Available commands: info, help, tinyurl"
-    m.reply "The bot will say hello sometimes"
+    m.reply "To send command, use !command, or send a message to the bot"
+    m.reply "The bot will say hello sometimes."
     m.reply "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog"
   end
 
   # Provide a simple command , example
   # botname: tinyrul <your_url>. The bot will reply to the author
   # a tiny version of your URL. HTTP and HTTPS only.
-  on :message, /^archl0n0xvn: tinyurl (https?:\/\/[^ ]+)/ do |m, url|
+  on :message, /^(!|archl0n0xvn: )tinyurl (https?:\/\/[^ ]+)/ do |m, url|
     # urls = URI.extract(m.message, "http")
     # puts ":::: #{urls}"
     urls = [] << url.strip
