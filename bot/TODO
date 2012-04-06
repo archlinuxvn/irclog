@@ -1,3 +1,7 @@
-* Support !command (ty4ever)
-* Fix Hello behavior
-* Provide help to any commands
+#1 Support !command (ty4ever)
+#2 Fix Hello behavior
+#3 Provide help to any commands
+#4 Support !reload so channel admin can reload the bot
+#5 Move stuff to plugin form
+#6 Support !load <plugin> to load a special plugin
+
