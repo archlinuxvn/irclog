@@ -142,6 +142,18 @@ class IcySensor
   end
 end
 
+class IcyBotUtils
+  include Cinch::Plugin
+
+  listen_to :message
+
+  def listen(m)
+    if m.message.match(/!how about your uptime/i)
+      m.reply "%x{uptime}".strip
+    end
+  end
+end
+
 ########################################################################
 #                               MAIN BOT                               #
 ########################################################################
@@ -158,6 +170,7 @@ bot = Cinch::Bot.new do
         IcyCmdTinyURL,
         IcyCmdBasic,
         IcyCmdArchStuff,
+        IcyBotUtils,
       ]
   end
 end
