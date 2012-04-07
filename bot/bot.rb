@@ -101,9 +101,11 @@ class IcyCmdArchStuff
     elsif gs = m.message.match(/!give ([^ ]+) wiki (.+)/)
       someone, wiki = gs[1], gs[2]
     end
-    wiki = wiki.strip.gsub(" ", "%20")
-    someone = "#{someone}: " unless someone.empty?
-    m.reply "#{someone}https://wiki.archlinux.org/index.php/Special:Search/#{wiki}"
+    if wiki
+      wiki = wiki.strip.gsub(" ", "%20")
+      someone = "#{someone}: " unless someone.empty?
+      m.reply "#{someone}https://wiki.archlinux.org/index.php/Special:Search/#{wiki}"
+    end
   end
 end
 
