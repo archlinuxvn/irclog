@@ -97,11 +97,13 @@ class IcyCmdArchStuff
 
   def listen(m)
     if gs = m.message.match(/^!arch (.+)/)
-      m.reply "https://wiki.archlinux.org/index.php/Special:Search/#{gs[1].strip}"
+      wiki, someone = gs[1], ""
     elsif gs = m.message.match(/!give ([^ ]+) wiki (.+)/)
-      someone, wiki = gs[1].strip, gs[2].strip
-      m.reply "#{someone}: https://wiki.archlinux.org/index.php/Special:Search/#{wiki}"
+      someone, wiki = gs[1], gs[2]
     end
+    wiki = wiki.strip.gsub(" ", "%20")
+    someone = "#{someone}: " unless someone.empty?
+    m.reply "#{someone}https://wiki.archlinux.org/index.php/Special:Search/#{wiki}"
   end
 end
 
@@ -120,7 +122,7 @@ class IcyCmdBasic
       m.reply " * source code http://github.com/archlinuxvn/"
     elsif m.message.match(/^!help/)
       m.reply "To send command, use !command."
-      m.reply "Available commands: info, help, tinyurl, arch"
+      m.reply "Available commands: info, help, tinyurl, arch, give"
       m.reply "The bot will say hello sometimes."
       m.reply "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog"
     end
