@@ -169,7 +169,7 @@ class BotUtils
       when "revision" then %x{git log -1 | grep ^Date:}.strip
       when "uptime"   then %x{uptime}.strip
       when "uname"    then %x{uname -a}.strip
-      when "help"     then "Commands are provide by plugin. " <<
+      when "help"     then "Commands are provided by plugins. " <<
                             "To send command, use !command. " <<
                             "To get help message, type !help <plugin name in lowercase>. " <<
                             "Available plugins: Hello, TinyUrl, Give, BotUtils, Sensor, Basic. " <<
