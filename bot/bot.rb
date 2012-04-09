@@ -103,7 +103,7 @@ class Give
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
   def give_something(m, someone, section, args)
-    args = args.strip!
+    args.strip!
     text = case section
     when "wiki" then
       wiki = args.gsub(" ", "%20")
