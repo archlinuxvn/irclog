@@ -14,10 +14,24 @@ require 'open-uri'
 BOT_NAME = "archl0n0xvn"
 
 ########################################################################
+#                              HELPERS                                 #
+########################################################################
+
+# Provide a simple command , example
+# botname: tinyrul <your_url>. The bot will reply to the author
+# a tiny version of your URL. HTTP and HTTPS only.
+def tinyurl(url)
+  url = open("http://tinyurl.com/api-create.php?url=#{URI.escape(url)}").read
+  url == "Error" ? nil : url
+rescue OpenURI::HTTPError
+  nil
+end
+
+########################################################################
 #                               PLUGINS                                #
 ########################################################################
 
-class IcyUserMonitor
+class UserMonitor
   include Cinch::Plugin
 
   listen_to :connect, method: :on_connect
@@ -40,10 +54,12 @@ end
 
 # Say another hello to follow a previous Hello message
 # If A says Hi to B, the bot also says Hi to B (unless B is the bot itself)
-class IcyHello
+class Hello
   include Cinch::Plugin
 
   listen_to :message
+
+  set(:help => "Say Hello if someone says hello to someone else")
 
   def listen(m)
     text = nil
@@ -64,77 +80,73 @@ class IcyHello
 end
 
 # Provice command !tinyurl
-class IcyCmdTinyURL
+class TinyURL
   include Cinch::Plugin
 
-  listen_to :message
+  set :help => "Make a shorten version of an URL. Syntax: !tinyurl <long URL>. To send the output to someone, try !give <someone> tinyurl <long URL>."
 
-  # Provide a simple command , example
-  # botname: tinyrul <your_url>. The bot will reply to the author
-  # a tiny version of your URL. HTTP and HTTPS only.
-  def tinyurl(url)
-    url = open("http://tinyurl.com/api-create.php?url=#{URI.escape(url)}").read
-    url == "Error" ? nil : url
-  rescue OpenURI::HTTPError
-    nil
-  end
+  match /tinyurl (https?:\/\/[^ ]+)/, :method => :simple_form
 
-  def listen(m)
-    if gs = m.message.match(/^!tinyurl (https?:\/\/[^ ]+)/)
-      url = gs[1]
-      if url_ = tinyurl(url)
-        m.reply "#{url_} <- #{url.slice(0, 20)}"
-      end
+  def simple_form(m, url)
+    if url_ = tinyurl(url)
+      m.reply "#{url_} <- #{url.slice(0, 20)}"
     end
   end
 end
 
 # Micesslaneous commands to interact with Arch wiki, forum,...
-class IcyCmdArchStuff
+class Give
   include Cinch::Plugin
 
-  listen_to :message
+  set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl"
 
-  def listen(m)
-    if gs = m.message.match(/^!arch (.+)/)
-      wiki, someone = gs[1], ""
-    elsif gs = m.message.match(/!give ([^ ]+) wiki (.+)/)
-      someone, wiki = gs[1], gs[2]
+  match /give ([^ ]+) (.+) (.+)/, :method => :give_something
+
+  def give_something(m, someone, section, args)
+    text = case section
+    when "wiki" then
+      wiki = args.strip.gsub(" ", "%20")
+      wiki ? "https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
+    when "tinyurl" then
+      tinyurl(args)
+    else
+      ""
     end
-    if wiki
-      wiki = wiki.strip.gsub(" ", "%20")
-      someone = "#{someone}: " unless someone.empty?
-      m.reply "#{someone}https://wiki.archlinux.org/index.php/Special:Search/#{wiki}"
+
+    if text
+      if not text.empty?
+        m.reply "#{someone}: #{text}"
+      else
+        m.reply "#{m.user.nick}: nothing to give to #{someone}"
+      end
     end
   end
 end
 
 # Provide basic commands
-class IcyCmdBasic
+class Basic
   include Cinch::Plugin
 
-  listen_to :message
+  set(:help => "Provide basic information about ArchLinuxVn. Syntax: !info <section>. <section> may be: home, list, repo or empty. If you want to find helps about the bot, try `!bot help` instead.")
 
-  def listen(m)
-    if m.message.match(/^!info/)
-      m.reply "ArchLinuxVn aka Vietnamese Groups of ArchLinux Users"
-      m.reply " * irc channel #archlinuxvn on irc.freenode.net"
-      m.reply " * homepage http://archlinuxvn.tuxfamily.org/"
-      m.reply " * mailing list http://groups.google.com/group/archlinuxvn"
-      m.reply " * source code http://github.com/archlinuxvn/"
-    elsif m.message.match(/^!help/)
-      m.reply "To send command, use !command."
-      m.reply "Available commands: info, help, tinyurl, arch, give"
-      m.reply "The bot will say hello sometimes."
-      m.reply "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog"
+  match /info (.+)/,  :method => :bot_info
+
+  def bot_info(m, section)
+    text = case section
+      when "home" then "http://archlinuxvn.tuxfamily.org/"
+      when "list" then "http://groups.google.com/group/archlinuxvn"
+      when "repo" then "http://github.com/archlinuxvn/"
+      else nil
     end
+    m.reply "#{m.user.nick}: #{text}" if text
   end
 end
 
 # Provide basic sensor :)
-class IcySensor
+class Sensor
   include Cinch::Plugin
 
+  set :help => "Send warning if user says bad words."
   listen_to :message
 
   def listen(m)
@@ -144,15 +156,27 @@ class IcySensor
   end
 end
 
-class IcyBotUtils
+class BotUtils
   include Cinch::Plugin
 
-  listen_to :message
+  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname, revision"
 
-  def listen(m)
-    if m.message.match(/!how about your uptime/i)
-      m.reply %x{uptime}.strip
+  match /bot (.+)/, :method => :give_bot_info
+
+  def give_bot_info(m, cmd)
+    text = case cmd
+      when "revision" then %x{git log -1 | grep ^Date:}.strip
+      when "uptime"   then %x{uptime}.strip
+      when "uname"    then %x{uname -a}.strip
+      when "help"     then "Commands are provide by plugin. " <<
+                            "To send command, use !command. " <<
+                            "To get help message, type !help <plugin name in lowercase>. " <<
+                            "Available plugins: Hello, TinyUrl, Give, BotUtils, Sensor, Basic. " <<
+                            "To test the development bot, join #archlinux_bot_devel. " <<
+                            "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog."
+      else nil
     end
+    m.reply "#{m.user.nick}: #{text}" if text
   end
 end
 
@@ -163,16 +187,19 @@ end
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = "irc.freenode.org"
-    c.channels = ["#archlinuxvn"]
+    c.port = 6697
+    c.channels = ["#archlinuxvn", "#archlinuxvn_bot_devel"]
     c.nick = c.user = c.realname = BOT_NAME
+    c.prefix = /^!/
+    c.ssl.use = true
     c.plugins.plugins = [
-        IcyHello,
-        IcySensor,
-        IcyUserMonitor,
-        IcyCmdTinyURL,
-        IcyCmdBasic,
-        IcyCmdArchStuff,
-        IcyBotUtils,
+        Hello,
+        Sensor,
+        UserMonitor,
+        TinyURL,
+        Basic,
+        Give,
+        BotUtils,
       ]
   end
 end
