@@ -103,9 +103,10 @@ class Give
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
   def give_something(m, someone, section, args)
+    args = args.strip!
     text = case section
     when "wiki" then
-      wiki = args.strip.gsub(" ", "%20")
+      wiki = args.gsub(" ", "%20")
       wiki ? "https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
     when "tinyurl" then
       tinyurl(args)
