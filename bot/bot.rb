@@ -173,7 +173,7 @@ class BotUtils
                             "To send command, use !command. " <<
                             "To get help message, type !help <plugin name in lowercase>. " <<
                             "Available plugins: Hello, TinyUrl, Give, BotUtils, Sensor, Basic. " <<
-                            "To test the development bot, join #archlinux_bot_devel. " <<
+                            "To test the development bot, join #archlinuxvn_bot_devel. " <<
                             "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog."
       else nil
     end
