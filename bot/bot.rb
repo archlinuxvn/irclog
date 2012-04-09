@@ -100,7 +100,7 @@ class Give
 
   set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl"
 
-  match /give ([^ ]+) (.+) (.+)/, :method => :give_something
+  match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
   def give_something(m, someone, section, args)
     text = case section
