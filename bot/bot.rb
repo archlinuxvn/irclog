@@ -160,13 +160,12 @@ end
 class BotUtils
   include Cinch::Plugin
 
-  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname, revision"
+  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname"
 
   match /bot (.+)/, :method => :give_bot_info
 
   def give_bot_info(m, cmd)
     text = case cmd
-      when "revision" then %x{git log -1 | grep ^Date:}.strip
       when "uptime"   then %x{uptime}.strip
       when "uname"    then %x{uname -a}.strip
       when "help"     then "Commands are provided by plugins. " <<
