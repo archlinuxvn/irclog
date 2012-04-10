@@ -110,19 +110,17 @@ class Give
       wiki ? "https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
     when "tinyurl" then
       tinyurl(args)
-    else
-      if gs = args.match(/^some ([^ ]+)/)
-        case gs[1]
-          when "thanks" then "Thank you very much"
-          when "shit"   then "Oh, you ... s^ck"
-          when "hugs"   then "Oh, let me hold you tide"
-          when "kiss"   then "Kiss you a thousand times"
-          when "helps"  then "You wanna try google instead"
-          else "#{m.user.nick} wants me to delivery to you some #{gs[1}"
-        end
-      else
-        ""
+    when "some"
+      case args
+        when "thanks" then "Thank you very much"
+        when "shit"   then "Oh, you ... s^ck"
+        when "hugs"   then "Oh, let me hold you tide"
+        when "kiss"   then "Kiss you a thousand times"
+        when "helps"  then "You wanna try google instead"
+        else "#{m.user.nick} wants me to delivery to you some #{args}"
       end
+    else
+      ""
     end
 
     if text
