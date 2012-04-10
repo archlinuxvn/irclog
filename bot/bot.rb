@@ -98,7 +98,7 @@ end
 class Give
   include Cinch::Plugin
 
-  set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl"
+  set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl, some."
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
@@ -111,7 +111,18 @@ class Give
     when "tinyurl" then
       tinyurl(args)
     else
-      ""
+      if gs = args.match(/^some ([^ ]+)/)
+        case gs[1]
+          when "thanks" then "Thank you very much"
+          when "shit"   then "Oh, you ... s^ck"
+          when "hugs"   then "Oh, let me hold you tide"
+          when "kiss"   then "Kiss you a thousand times"
+          when "helps"  then "You wanna try google instead"
+          else "#{m.user.nick} wants me to delivery to you some #{gs[1}"
+        end
+      else
+        ""
+      end
     end
 
     if text
