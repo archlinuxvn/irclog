@@ -116,7 +116,7 @@ class Give
       case args
         when "thanks" then "Thank you very much"
         when "shit"   then "Oh, you ... s^ck"
-        when "hugs"   then "Oh, let me hold you titght"
+        when "hugs"   then "Oh, let me hold you tight"
         when "kiss"   then "Kiss you a thousand times"
         when "helps"  then "You wanna try google instead"
         else
