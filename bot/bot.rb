@@ -104,6 +104,8 @@ class Give
 
   def give_something(m, someone, section, args)
     args.strip!
+    someone = "#{m.user.nick}" if %{me /me}.include?(someone)
+
     text = case section
     when "wiki" then
       wiki = args.gsub(" ", "%20")
@@ -114,10 +116,15 @@ class Give
       case args
         when "thanks" then "Thank you very much"
         when "shit"   then "Oh, you ... s^ck"
-        when "hugs"   then "Oh, let me hold you tide"
+        when "hugs"   then "Oh, let me hold you titght"
         when "kiss"   then "Kiss you a thousand times"
         when "helps"  then "You wanna try google instead"
-        else "#{m.user.nick} wants me to delivery to you some #{args}"
+        else
+          if m.user.nick == someone
+            "Sorry #{someone}. I have nothing good for you"
+          else
+            "#{m.user.nick} wants me to delivery to you some #{args}"
+          end
       end
     else
       ""
