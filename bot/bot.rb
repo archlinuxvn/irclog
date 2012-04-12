@@ -200,11 +200,18 @@ end
 #                               MAIN BOT                               #
 ########################################################################
 
+channels = Array.new(ARGV).map{|p| "##{p}"}
+
+if channels.empty?
+  STDERR.write(":: Error: You must specify at least on channel at command line.\n")
+  exit 1
+end
+
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = "irc.freenode.org"
     c.port = 6697
-    c.channels = ["#archlinuxvn_bot_devel"]
+    c.channels = channels
     c.nick = c.user = c.realname = BOT_NAME
     c.prefix = /^!/
     c.ssl.use = true
@@ -213,9 +220,9 @@ bot = Cinch::Bot.new do
         Sensor,
         UserMonitor,
         TinyURL,
-        Basic,
+        Info,
         Give,
-        BotUtils,
+        Bot,
       ]
   end
 end
