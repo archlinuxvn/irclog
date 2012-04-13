@@ -98,18 +98,34 @@ end
 class Give
   include Cinch::Plugin
 
-  set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl"
+  set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl, some."
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
   def give_something(m, someone, section, args)
     args.strip!
+    someone = "#{m.user.nick}" if %{me /me}.include?(someone)
+
     text = case section
     when "wiki" then
       wiki = args.gsub(" ", "%20")
       wiki ? "https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
     when "tinyurl" then
       tinyurl(args)
+    when "some"
+      case args
+        when "thanks" then "Thank you very much"
+        when "shit"   then "Oh, you ... s^ck"
+        when "hugs"   then "Oh, let me hold you tight"
+        when "kiss"   then "Kiss you a thousand times"
+        when "helps"  then "You wanna try google instead"
+        else
+          if m.user.nick == someone
+            "Sorry #{someone}. I have nothing good for you"
+          else
+            "#{m.user.nick} wants me to delivery to you some #{args}"
+          end
+      end
     else
       ""
     end
@@ -125,7 +141,7 @@ class Give
 end
 
 # Provide basic commands
-class Basic
+class Info
   include Cinch::Plugin
 
   set(:help => "Provide basic information about ArchLinuxVn. Syntax: !info <section>. <section> may be: home, list, repo or empty. If you want to find helps about the bot, try `!bot help` instead.")
@@ -157,22 +173,21 @@ class Sensor
   end
 end
 
-class BotUtils
+class Bot
   include Cinch::Plugin
 
-  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname, revision"
+  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname"
 
-  match /bot (.+)/, :method => :give_bot_info
+  match /bot ([^ ]+)(.*)/, :method => :give_bot_info
 
-  def give_bot_info(m, cmd)
+  def give_bot_info(m, cmd, args)
     text = case cmd
-      when "revision" then %x{git log -1 | grep ^Date:}.strip
       when "uptime"   then %x{uptime}.strip
       when "uname"    then %x{uname -a}.strip
       when "help"     then "Commands are provided by plugins. " <<
                             "To send command, use !command. " <<
                             "To get help message, type !help <plugin name in lowercase>. " <<
-                            "Available plugins: Hello, TinyUrl, Give, BotUtils, Sensor, Basic. " <<
+                            "Available plugins: Hello, TinyUrl, Give, Bot, Sensor, Info. " <<
                             "To test the development bot, join #archlinuxvn_bot_devel. " <<
                             "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog."
       else nil
@@ -185,11 +200,18 @@ end
 #                               MAIN BOT                               #
 ########################################################################
 
+channels = Array.new(ARGV).map{|p| "##{p}"}
+
+if channels.empty?
+  STDERR.write(":: Error: You must specify at least on channel at command line.\n")
+  exit 1
+end
+
 bot = Cinch::Bot.new do
   configure do |c|
     c.server = "irc.freenode.org"
     c.port = 6697
-    c.channels = ["#archlinuxvn", "#archlinuxvn_bot_devel"]
+    c.channels = channels
     c.nick = c.user = c.realname = BOT_NAME
     c.prefix = /^!/
     c.ssl.use = true
@@ -198,9 +220,9 @@ bot = Cinch::Bot.new do
         Sensor,
         UserMonitor,
         TinyURL,
-        Basic,
+        Info,
         Give,
-        BotUtils,
+        Bot,
       ]
   end
 end
