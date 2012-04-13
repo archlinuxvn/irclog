@@ -32,4 +32,4 @@ log-split: archives/archlinuxvn.log.gz
 	@echo ":: Get the log for yesterday"
 	@zcat archives/archlinuxvn.log.gz | ./irssi-log-split.sh
 
-daily: archives/archlinuxvn.log.gz log-split tidylog tuxfamily tiny
+daily: archives/archlinuxvn.log.gz log-split tidylog tuxfamily
