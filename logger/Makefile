@@ -1,6 +1,10 @@
 _RD_TUXFAMILY = kyanh@ssh.tuxfamily.org:~/archlinuxvn/archlinuxvn.tuxfamily.org-web/htdocs/irclogs/
 _RF_BOT_LOG   = "goodtrans.hcm:~/irclogs/freenode/\#archlinuxvn.log"
 
+ifndef _ARCHIVE
+  _ARCHIVE    = archives/archlinuxvn.log.gz
+endif
+
 default:                             # list all section of this Makefile
 	@cat Makefile | grep -E "^[a-z]+.*:"
 
@@ -28,8 +32,8 @@ archives/archlinuxvn.log.gz:: archlinuxvn.log   # download logs from bot
 	@cd archives && rsync -rapv $(_RF_BOT_LOG) ./archlinuxvn.log
 	@cd ./archives && gzip archlinuxvn.log
 
-log-split: archives/archlinuxvn.log.gz
+log-split: $(_ARCHIVE)
 	@echo ":: Get the log for yesterday"
-	@zcat archives/archlinuxvn.log.gz | ./irssi-log-split.sh
+	@zcat $(_ARCHIVE) | ./irssi-log-split.sh
 
 daily: archives/archlinuxvn.log.gz log-split tidylog tuxfamily
