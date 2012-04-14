@@ -1,5 +1,4 @@
 _RD_TUXFAMILY = kyanh@ssh.tuxfamily.org:~/archlinuxvn/archlinuxvn.tuxfamily.org-web/htdocs/irclogs/
-_RF_BOT_LOG   = "goodtrans.hcm:~/irclogs/freenode/\#archlinuxvn.log"
 
 ifndef _ARCHIVE
   _ARCHIVE    = archives/archlinuxvn.log.gz
@@ -7,11 +6,6 @@ endif
 
 default:                             # list all section of this Makefile
 	@cat Makefile | grep -E "^[a-z]+.*:"
-
-tiny:                             # upload logs files to icy.homenet.org
-	@echo ":: Uploading files to icy.homenet.org"
-	@rsync -rapvessh --delete ./www/irclogs/ \
-		tiny.icy.bar:/mnt/www/archlinuxvn/irclogs/
 
 www/irclogs/.htpasswd: htpasswd   # create file for basic authentication
 	@./make-htpasswd.sh > $(@)
@@ -24,16 +18,11 @@ tuxfamily:                         # upload web logs to tuxfamily server
 tidylog:                       # convert raw logs file into the web form
 	@./log-tidy.sh
 
-archlinuxvn.log::                           # uncompress gzip-ed archive
-	@-cd archives && gunzip archlinuxvn.log.gz
+download:                             # download irssi logs from remotes
+	@./download.sh
 
-archives/archlinuxvn.log.gz:: archlinuxvn.log   # download logs from bot
-	@echo ":: Download the files from remote and compress it"
-	@cd archives && rsync -rapv $(_RF_BOT_LOG) ./archlinuxvn.log
-	@cd ./archives && gzip archlinuxvn.log
-
-log-split: $(_ARCHIVE)
-	@echo ":: Get the log for yesterday"
+log-split:
+	@echo ":: Get logs from archive $(_ARCHIVE)"
 	@zcat $(_ARCHIVE) | ./irssi-log-split.sh
 
-daily: archives/archlinuxvn.log.gz log-split tidylog tuxfamily
+daily: download log-split tidylog tuxfamily
