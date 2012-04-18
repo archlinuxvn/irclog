@@ -8,7 +8,11 @@
 cd archives \
 && {
   for f in archlinuxvn m1.archlinuxvn; do
-    [[ -f $f.log.gz ]] && gunzip $f.log.gz
+    if [[ -f ./$f.log.gz ]]; then
+      echo ":: Decompressing $f.log.gz"
+      gunzip $f.log.gz
+    fi
+    wait
     case $f in
       'archlinuxvn')     _R_="irc.archlinuxvn.m0" ;;
       'm1.archlinuxvn')  _R_="irc.archlinuxvn.m1" ;;
