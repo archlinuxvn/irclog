@@ -12,8 +12,8 @@ _DATE="${DATE:-$_YESTERDAY}"
 _D_OUTPUT="./archives/"                    # output directory
 _F_OUTPUT="$_D_OUTPUT/$_DATE.txt"     # output file
 
-if [[ -f "$_F_OUTPUT" ]]; then
-  echo >&2 ":: The file $_D_OUTPUT/$_DATE.txt does exist"
+if [[ -f "$_F_OUTPUT.gz" ]]; then
+  echo >&2 ":: The file $_D_OUTPUT/$_DATE.txt.gz does exist"
   echo >&2 ":: You must examine and remove that file to continue"
   echo >&2 ":: The program now exit (0)."
   exit 0
@@ -23,4 +23,5 @@ fi
 cat \
   | grep "^$_DATE " \
   | sed -e "s#^$_DATE ##g" \
-  > $_F_OUTPUT
+  | gzip -9c \
+  > $_F_OUTPUT.gz
