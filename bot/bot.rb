@@ -123,7 +123,7 @@ class Give
           if m.user.nick == someone
             "Sorry #{someone}. I have nothing good for you"
           else
-            "#{m.user.nick} wants me to delivery to you some #{args}"
+            "You've got some #{args} from #{m.user.nick}"
           end
       end
     else
