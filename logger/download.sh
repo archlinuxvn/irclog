@@ -10,7 +10,7 @@ cd archives \
   for f in archlinuxvn m1.archlinuxvn; do
     if [[ -f ./$f.log.gz ]]; then
       echo ":: Decompressing $f.log.gz"
-      gunzip $f.log.gz
+      gunzip ./$f.log.gz
     fi
     wait
     case $f in
