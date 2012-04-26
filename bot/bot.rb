@@ -21,17 +21,19 @@ BOT_NAME = "archl0n0xvn"
 BOT_CACHE      = {}
 BOT_TIMESTAMP  = 600 # 600 seconds aka 10 minutes
 
-def _cache_timeout?(section, key)
+# First event: old val. in the past : expired, allow
+# Next  event: now - old > PERM     : expired, allow
+# Next  event: now - old < PERM     : not expired, not allowed
+def _cache_expired?(section, key)
   now = Time.now
   BOT_CACHE[section]      ||= {}
-  BOT_CACHE[section][key] ||= now
-  # Cache is expired
-  if BOT_CACHE[section][key] - now > BOT_TIMESTAMP
+  if not BOT_CACHE[section][key]
     BOT_CACHE[section][key] = now
-    return true
-  else
+  elsif now - BOT_CACHE[section][key] > BOT_TIMESTAMP
+    BOT_CACHE[section][key] = now
     return false
   end
+  true
 end
 
 # Provide a simple command , example
@@ -89,9 +91,9 @@ class Hello
     return unless text
 
     if text.match(BOT_NAME)
-      m.reply "Hello, #{m.user.nick}" if _cache_timeout(:hello, m.user.nick)
+      m.reply "Hello, #{m.user.nick}" if _cache_expired(:hello, m.user.nick)
     else
-      m.reply "Hello, #{text}" if _cache_timeout?(:hello, text)
+      m.reply "Hello, #{text}" if _cache_expired?(:hello, text)
     end
   end
 end
@@ -185,7 +187,7 @@ class Sensor
 
   def listen(m)
     if gs = m.message.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)
-      m.reply "#{m.user.nick}: take it easy. don't say #{gs[1]}" if _cache_timeout?(:sensor, m.user.nick)
+      m.reply "#{m.user.nick}: take it easy. don't say #{gs[1]}" if _cache_expired?(:sensor, m.user.nick)
     end
   end
 end
