@@ -5,5 +5,5 @@
  -5 Move stuff to plugin form
  #6 Support !load <plugin> to load a special plugin
  #7 Detect users event (join, leave)
- #8 Move plugins to files
+ -8 Move plugins to files
  
