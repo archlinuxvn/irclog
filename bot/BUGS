@@ -1,0 +1,7 @@
+KNOWN BUGS
+
+* Can't detect if user has logged in to the channel
+* If there are two running version of the bot, plugin Hello
+  can cause infinite loop (aka room flood!)
+* TinyUrl: Can't give right url if the original one has
+  some special characters.
