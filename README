@@ -1,1 +1,10 @@
-Utils for IRC channel irc.freenode.net#archlinuxvn
+Purpose: Provide some utils for the community (ArchLinuxVn)
+Authors: ArchLinuxvn. Mulitple authors
+License: Fair license
+Date   : 2012
+
+Utils
+
+  bot:    Utils for IRC channel irc.freenode.net#archlinuxvn
+  irclog: LogUtils of the official channel
+  www:    Simple static homepage
