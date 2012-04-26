@@ -17,6 +17,23 @@ BOT_NAME = "archl0n0xvn"
 #                              HELPERS                                 #
 ########################################################################
 
+# Global variable
+BOT_CACHE      = {}
+BOT_TIMESTAMP  = 600 # 600 seconds aka 10 minutes
+
+def _cache_timeout?(section, key)
+  now = Time.now
+  BOT_CACHE[section]      ||= {}
+  BOT_CACHE[section][key] ||= now
+  # Cache is expired
+  if BOT_CACHE[section][key] - now > BOT_TIMESTAMP
+    BOT_CACHE[section][key] = now
+    return true
+  else
+    return false
+  end
+end
+
 # Provide a simple command , example
 # botname: tinyrul <your_url>. The bot will reply to the author
 # a tiny version of your URL. HTTP and HTTPS only.
@@ -72,9 +89,9 @@ class Hello
     return unless text
 
     if text.match(BOT_NAME)
-      m.reply "Hello, #{m.user.nick}"
+      m.reply "Hello, #{m.user.nick}" if _cache_timeout(:hello, u.user.nick)
     else
-      m.reply "Hello, #{text}"
+      m.reply "Hello, #{text}" if _cache_timeout?(:hello, text)
     end
   end
 end
@@ -168,7 +185,7 @@ class Sensor
 
   def listen(m)
     if gs = m.message.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)
-      m.reply "#{m.user.nick}: take it easy. don't say #{gs[1]}"
+      m.reply "#{m.user.nick}: take it easy. don't say #{gs[1]}" if _cache_timeout?(:sensor, m.user.nick)
     end
   end
 end
