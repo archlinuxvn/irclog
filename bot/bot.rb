@@ -29,11 +29,13 @@ def _cache_expired?(section, key)
   BOT_CACHE[section]      ||= {}
   if not BOT_CACHE[section][key]
     BOT_CACHE[section][key] = now
+    true
   elsif now - BOT_CACHE[section][key] > BOT_TIMESTAMP
     BOT_CACHE[section][key] = now
-    return false
+    true
+  else
+    false
   end
-  true
 end
 
 # Provide a simple command , example
