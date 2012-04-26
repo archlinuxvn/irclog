@@ -89,7 +89,7 @@ class Hello
     return unless text
 
     if text.match(BOT_NAME)
-      m.reply "Hello, #{m.user.nick}" if _cache_timeout(:hello, u.user.nick)
+      m.reply "Hello, #{m.user.nick}" if _cache_timeout(:hello, m.user.nick)
     else
       m.reply "Hello, #{text}" if _cache_timeout?(:hello, text)
     end
@@ -218,6 +218,7 @@ end
 ########################################################################
 
 channels = Array.new(ARGV).map{|p| "##{p}"}
+channels.uniq!
 
 if channels.empty?
   STDERR.write(":: Error: You must specify at least on channel at command line.\n")
