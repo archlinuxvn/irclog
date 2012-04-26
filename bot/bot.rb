@@ -11,7 +11,7 @@ require 'cinch'
 require 'uri'
 require 'open-uri'
 
-BOT_NAME = "archl0n0xvn"
+BOT_NAME = "botTest"
 
 ########################################################################
 #                              HELPERS                                 #
@@ -165,10 +165,18 @@ class Sensor
 
   set :help => "Send warning if user says bad words."
   listen_to :message
-
+  
   def listen(m)
-    if gs = m.message.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)
-      m.reply "#{m.user.nick}: take it easy. don't say #{gs[1]}"
+	check = false
+	lstBW = []
+	strTest = m.message
+    while strTest.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i) and m.user.nick != BOT_NAME
+		badWord = strTest.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)[1]
+		lstBW << badWord
+		strTest = strTest[strTest.index(badWord)+badWord.length.. strTest.length]
+		if !strTest.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)
+			m.reply "#{m.user.nick}: take it easy. don't say #{lstBW.map { |i| i.to_s }.join(",")}"
+		end
     end
   end
 end
