@@ -191,14 +191,11 @@ class Sensor
 
   listen_to :message
 
-  @_reg_sensor = /\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i
-
   def listen(m)
     # FIXME: some user can use the BOT_NAME to trick the bot
     return if m.user.nick.match(BOT_NAME)
-    badwords = m.message.split.delete_if{|w| not w.match(@_reg_sensor)}
-    badwords.uniq!
-    badwords.sort!
+    badwords = m.message.split.reject{|w| not w.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)}
+    badwords = badwords.uniq.sort
     m.reply "#{m.user.nick}: take it easy. don't say #{badwords.join(", ")}" if not badwords.empty? and _cache_expired?(:sensor, m.user.nick)
   end
 end
@@ -212,9 +209,8 @@ class Bot
   match /ping/,            :method => :ping_pong
   match /help$/,           :method => :help_user
 
-  # FIXME: this method seems not to work :)
   def help_user(m)
-    m.reply "#{m.user.nick}: try `/help` or `!help <plugin_name>`"
+    m.reply "#{m.user.nick}: try `/help` or `!help <plugin_name>`. The first command is the builtin command of your IRC client. The later will query the bot. If you are not sure, you may start with `!help bot` or `!bot help`."
   end
 
   def ping_pong(m)
