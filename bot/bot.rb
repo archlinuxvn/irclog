@@ -18,8 +18,10 @@ BOT_NAME = "archl0n0xvn"
 ########################################################################
 
 # Global variable
+# FIXME: flush the CACHE after sometime. Otherwise, the system would run
+# FIXME: out of the memory :) Check with garbage collection.
 BOT_CACHE      = {}
-BOT_TIMESTAMP  = 600 # 600 seconds aka 10 minutes
+BOT_CACHE_TIME = 600 # 600 seconds aka 10 minutes
 
 # First event: old val. in the past : expired, allow
 # Next  event: now - old > PERM     : expired, allow
@@ -30,7 +32,7 @@ def _cache_expired?(section, key)
   if not BOT_CACHE[section][key]
     BOT_CACHE[section][key] = now
     true
-  elsif now - BOT_CACHE[section][key] > BOT_TIMESTAMP
+  elsif now - BOT_CACHE[section][key] > BOT_CACHE_TIME
     BOT_CACHE[section][key] = now
     true
   else
@@ -104,7 +106,7 @@ end
 class TinyURL
   include Cinch::Plugin
 
-  set :help => "Make a shorten version of an URL. Syntax: !tinyurl <long URL>. To send the output to someone, try !give <someone> tinyurl <long URL>."
+  set :help => "Make a shorten version of an URL. Syntax: `!tinyurl <long URL>`. To send the output to someone, try `!give <someone> tinyurl <long URL>`. KNOWN BUG(S): The plugin doesn't work correctly if your URL has some special characters."
 
   match /tinyurl (https?:\/\/[^ ]+)/, :method => :simple_form
 
@@ -119,7 +121,7 @@ end
 class Give
   include Cinch::Plugin
 
-  set :help => "Give something to someone. Syntax: !give <someone> <section> <arguments>. <section> may be wiki, tinyurl, some."
+  set :help => "Give something to someone. Syntax: `!give <someone> <section> <arguments>`. <section> may be `wiki`, `tinyurl`, `some`. For <some>, there are some predefined messages: `thanks`, `shit`, `hugs`, `kiss`, `helps`."
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
@@ -135,16 +137,16 @@ class Give
       tinyurl(args)
     when "some"
       case args
-        when "thanks" then "Thank you very much"
-        when "shit"   then "Oh, you ... s^ck"
-        when "hugs"   then "Oh, let me hold you tight"
-        when "kiss"   then "Kiss you a thousand times"
-        when "helps"  then "You wanna try google instead"
+        when "thanks" then "thank you very much"
+        when "shit"   then "oh, you ... s^ck"
+        when "hugs"   then "oh, let me hold you tight"
+        when "kiss"   then "kiss you a thousand times"
+        when "helps"  then "you wanna try google instead"
         else
           if m.user.nick == someone
-            "Sorry #{someone}. I have nothing good for you"
+            "sorry #{someone}. I have nothing good for you"
           else
-            "You've got some #{args} from #{m.user.nick}"
+            "you've got some #{args} from #{m.user.nick}"
           end
       end
     else
@@ -165,15 +167,16 @@ end
 class Info
   include Cinch::Plugin
 
-  set(:help => "Provide basic information about ArchLinuxVn. Syntax: !info <section>. <section> may be: home, list, repo or empty. If you want to find helps about the bot, try `!bot help` instead.")
+  set(:help => "Provide basic information about ArchLinuxVn. Syntax: `!info <section>`. <section> may be: `home`, `list`, `repo`, `botsrc` or empty. If you want to find helps about the bot, try `!bot help` instead.")
 
   match /info (.+)/,  :method => :bot_info
 
   def bot_info(m, section)
     text = case section
-      when "home" then "http://archlinuxvn.tuxfamily.org/"
-      when "list" then "http://groups.google.com/group/archlinuxvn"
-      when "repo" then "http://github.com/archlinuxvn/"
+      when "home"   then "http://archlinuxvn.tuxfamily.org/"
+      when "list"   then "http://groups.google.com/group/archlinuxvn"
+      when "repo"   then "http://github.com/archlinuxvn/"
+      when "botsrc" then "http://github.com/archlinuxvn/irclog/"
       else nil
     end
     m.reply "#{m.user.nick}: #{text}" if text
@@ -184,40 +187,47 @@ end
 class Sensor
   include Cinch::Plugin
 
-  set :help => "Send warning if user says bad words."
+  set :help => "Send warning if user says bad words. After the warning is sent, the bot will record the event's time and it will not report again within #{BOT_CACHE_TIME} seconds. So... you are safe to say anything you want in #{BOT_CACHE_TIME} seconds without bothering the bot :D. BUG: if your nick match the pattern '#{BOT_NAME}', the bot will simply ignore anything you say. This is a KNOWN bug, so it is't funny if you are trying to trick the bot this way :)"
+
   listen_to :message
 
-  def listen(m)
-    return unless _cache_expired?(:sensor, m.user.nick)
+  @_reg_sensor = /\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i
 
-    check = false
-    lstBW = []
-    strTest = m.message
-    while strTest.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i) and not m.user.nick.match(BOT_NAME)
-      badWord = strTest.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)[1]
-      lstBW << badWord
-      strTest = strTest[strTest.index(badWord)+badWord.length.. strTest.length]
-      if !strTest.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)
-        m.reply "#{m.user.nick}: take it easy. don't say #{lstBW.map { |i| i.to_s }.join(", ")}"
-      end
-    end
+  def listen(m)
+    # FIXME: some user can use the BOT_NAME to trick the bot
+    return if m.user.nick.match(BOT_NAME)
+    badwords = m.message.split.delete_if{|w| not w.match(@_reg_sensor)}
+    badwords.uniq!
+    badwords.sort!
+    m.reply "#{m.user.nick}: take it easy. don't say #{badwords.join(", ")}" if not badwords.empty? and _cache_expired?(:sensor, m.user.nick)
   end
 end
 
 class Bot
   include Cinch::Plugin
 
-  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname"
+  set :help => "Query bot information. Syntax: !bot <section>, where section is: help, uptime, uname. You can also check the connection between you and the bot by the !ping command."
 
   match /bot ([^ ]+)(.*)/, :method => :give_bot_info
+  match /ping/,            :method => :ping_pong
+  match /help$/,           :method => :help_user
+
+  # FIXME: this method seems not to work :)
+  def help_user(m)
+    m.reply "#{m.user.nick}: try `/help` or `!help <plugin_name>`"
+  end
+
+  def ping_pong(m)
+    m.reply "#{m.user.nick}: pong"
+  end
 
   def give_bot_info(m, cmd, args)
     text = case cmd
       when "uptime"   then %x{uptime}.strip
       when "uname"    then %x{uname -a}.strip
       when "help"     then "Commands are provided by plugins. " <<
-                            "To send command, use !command. " <<
-                            "To get help message, type !help <plugin name in lowercase>. " <<
+                            "To send command, use `!command`. " <<
+                            "To get help message, type `!help <plugin name in lowercase>` " <<
                             "Available plugins: Hello, TinyUrl, Give, Bot, Sensor, Info. " <<
                             "To test the development bot, join #archlinuxvn_bot_devel. " <<
                             "To fix the bot's behavior, visit http://github.com/archlinuxvn/irclog."
