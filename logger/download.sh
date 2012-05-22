@@ -10,7 +10,9 @@
 cd archives \
 && {
   for f in archlinuxvn m1.archlinuxvn; do
-    if [[ -f ./$f.log.gz ]]; then
+    if [[ "$f" == "m1.archlinuxvn" ]]; then
+      rm -f ./$f.log.gz
+    elif [[ -f ./$f.log.gz ]]; then
       echo ":: Decompressing $f.log.gz"
       gunzip ./$f.log.gz
     fi
