@@ -1,0 +1,2 @@
+make daily DATE=2012-04-12 _ARCHIVE=./archives/m1.archlinuxvn.log.gz
+make daily _NO_DOWNLOAD=1 DATE=2012-05-17 _ARCHIVE=./archives/m1.archlinuxvn.log.gz

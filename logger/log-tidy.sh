@@ -21,6 +21,6 @@ for f in ./archives/*.txt.gz; do
       > $_f_output
     # touch -r $f $_f_output
   else
-    echo ":: File $_f_output is newer than the source $f"
+    echo ":: File $_f_output is newer than the source $f" >/dev/null
   fi
 done
