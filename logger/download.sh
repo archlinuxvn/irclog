@@ -5,10 +5,14 @@
 # Date   : 2012 Apr 14th
 # License: Fair license
 
+[[ -n "$_NO_DOWNLOAD" ]] && exit 0
+
 cd archives \
 && {
   for f in archlinuxvn m1.archlinuxvn; do
-    if [[ -f ./$f.log.gz ]]; then
+    if [[ "$f" == "m1.archlinuxvn" ]]; then
+      rm -f ./$f.log.gz
+    elif [[ -f ./$f.log.gz ]]; then
       echo ":: Decompressing $f.log.gz"
       gunzip ./$f.log.gz
     fi
