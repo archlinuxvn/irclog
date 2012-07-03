@@ -7,4 +7,3 @@ Utils
 
   bot:    Utils for IRC channel irc.freenode.net#archlinuxvn
   irclog: LogUtils of the official channel
-  www:    Simple static homepage
