@@ -24,7 +24,7 @@ _C_SED="$(cat "$_F_INPUT" \
 
 {
   echo "<html><head>"
-  echo "<title>ArchLinuxvn: IrcLogs: $(basename $F_INPUT .txt)</title>"
+  echo "<title>ArchLinuxvn: IrcLogs: $(basename $_F_INPUT .txt)</title>"
   echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
   echo '<meta name="generator" content="git@github.com:archlinuxvn/irclog.git">'
   echo "</head><body>"
