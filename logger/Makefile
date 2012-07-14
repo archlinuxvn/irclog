@@ -31,4 +31,4 @@ html-clean:
 html:
 	@find www/ -iname "*.txt" | while read _f; do ./colorize.sh $$_f 2>/dev/null; done
 
-daily: download log-split tidylog html tuxfamily
+daily: download log-split tidylog html
