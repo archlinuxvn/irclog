@@ -25,4 +25,10 @@ log-split:
 	@echo ":: Get logs from archive $(_ARCHIVE)"
 	@zcat $(_ARCHIVE) | ./irssi-log-split.sh
 
-daily: download log-split tidylog tuxfamily
+html-clean:
+	@find www/ -iname "*.html" -exec rm -fv {} +
+
+html:
+	@find www/ -iname "*.txt" | while read _f; do ./colorize.sh $$_f 2>/dev/null; done
+
+daily: download log-split tidylog html tuxfamily
