@@ -44,7 +44,8 @@ _C_SED="$(cat "$_F_INPUT" \
   echo "<h1>Discussion</h1>"
   echo "<pre>"
   eval "cat $_F_INPUT | sed -e 's#<#\&lt;#g' -e 's#>#\&gt;#g' $_C_SED" \
-    | sed -e "s#\(https\?://[^ ]\+\)#<a href=\"\1\">\1</a>#g"
+    | sed -e "s#\(https\?://[^ ]\+\)#<a href=\"\1\">\1</a>#g" \
+    | sed -e "s#^\([ ]*\)\([0-9]\+0\)\t#\1<strong>\2</strong>\t#g"
   echo "</pre>"
   echo "</body></html>"
 } > $_F_OUTPUT
