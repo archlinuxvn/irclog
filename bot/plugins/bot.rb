@@ -68,8 +68,7 @@ class Bot
         nil
       end
 
-      # reload = bot.config.plugins.plugins.include?(plugin_class)
-      ObjectSpace.each_object(plugin_class).map(&:unregister)
+      ObjectSpace.each_object(plugin_class).map(&:unregister) if plugin_class
 
       # Now load the plugin again
       begin
