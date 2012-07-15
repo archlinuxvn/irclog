@@ -16,6 +16,6 @@ class Sensor
     return if m.user.nick.match(BOT_NAME)
     badwords = m.message.split.reject{|w| not w.match(/\b(vcl|wtf|sh[1i]t|f.ck|d[e3]k|clgt)\b/i)}
     badwords = badwords.uniq.sort
-    m.reply "#{m.user.nick}: take it easy. don't say #{badwords.join(", ")}" if not badwords.empty? and _cache_expired?(:sensor, m.user.nick)
+    m.reply "#{m.user.nick}: Take it easy. don't say #{badwords.join(", ")}" if not badwords.empty? and _cache_expired?(:sensor, m.user.nick)
   end
 end
