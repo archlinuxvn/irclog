@@ -7,7 +7,7 @@
 class Give
   include Cinch::Plugin
 
-  set :help => "Give something to someone. Syntax: `!give <someone> <section> <arguments>`. <section> may be `wiki`, `tinyurl`, `some`. For <some>, there are some predefined messages: `thanks`, `shit`, `hugs`, `kiss`, `helps`."
+  set :help => "Give something to someone. Syntax: `!give <someone> <something> <others>`. <something> may be `wiki`, `tinyurl`, `some`. When `<something>` is `some`, `<others>` may be `thanks`, `shit`, `hugs`, `kiss`, `help`."
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
@@ -23,17 +23,15 @@ class Give
       tinyurl(args)
     when "some"
       case args
-        when "thanks" then "thank you very much"
-        when "shit"   then "oh, you ... s^ck"
-        when "hugs"   then "oh, let me hold you tight"
-        when "kiss"   then "kiss you a thousand times"
-        when "helps"  then "you wanna try google instead"
+        when "thanks" then "Thank you very much"
+        when "shit"   then "Oh, you ... s^ck"
+        when "hugs"   then "Oh, let me hold you tight"
+        when "kiss"   then "Kiss you a thousand times"
+        when "help"   then "You wanna try google instead"
         else
-          if m.user.nick == someone
-            "sorry #{someone}. I have nothing good for you"
-          else
-            "you've got some #{args} from #{m.user.nick}"
-          end
+          m.user.nick == someone \
+            ? "Sorry #{someone}. I have nothing good for you" \
+            : "You've got some `#{args}` from #{m.user.nick}"
       end
     else
       ""

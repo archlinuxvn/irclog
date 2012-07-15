@@ -12,7 +12,7 @@ class Hello
 
   listen_to :message
 
-  set(:help => "Say Hello if someone says hello to someone else")
+  set(:help => "Say `hello` as someone says hello to someone else.")
 
   def listen(m)
     text = nil
@@ -25,7 +25,7 @@ class Hello
     return unless text
 
     if text.match(BOT_NAME)
-      m.reply "Hello, #{m.user.nick}" if _cache_expired(:hello, m.user.nick)
+      m.reply "Hello, #{m.user.nick}" if _cache_expired?(:hello, m.user.nick)
     else
       m.reply "Hello, #{text}" if _cache_expired?(:hello, text)
     end

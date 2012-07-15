@@ -7,7 +7,7 @@
 class TinyUrl
   include Cinch::Plugin
 
-  set :help => "Make a shorten version of an URL. Syntax: `!tinyurl <long URL>`. To send the output to someone, try `!give <someone> tinyurl <long URL>`. KNOWN BUG(S): The plugin doesn't work correctly if your URL has some special characters."
+  set :help => "Make a shorten version of an URL. Syntax: `!tinyurl <URL>`. To send the output to someone, try `!give <someone> tinyurl <URL>`. KNOWN BUG(S): The plugin doesn't work correctly if your `<URL>` has special characters."
 
   match /tinyurl (https?:\/\/[^ ]+)/, :method => :simple_form
 

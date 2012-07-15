@@ -13,28 +13,32 @@ require 'open-uri'
 
 require "#{File.dirname(__FILE__)}/lib/core.rb"
 
+# FIXME: Logging support
+BOT_LOGGER = File.open(File.join(File.dirname(__FILE__), "var/channels.log"), "a")
+"Can't open log file 'var/channels.log' in a mode".die unless BOT_LOGGER
+BOT_LOGGER.sync = false
+
+# List of channels
+channels = Array.new(ARGV).map{|p| "##{p}"}.compact.uniq
+"No channel specified".die if channels.empty?
+
+# Plugin black list
+BOT_PLUGINS_BLACKLIST = %w{log user_monitor}
+
 plugins = Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].map do |p|
-  require p
-  begin
-    p_name = File.basename(p, ".rb").camelize
-    Object.const_get(p_name)
-  rescue => e
-    STDERR.puts ":: Error: camelized class '#{p_name}' not found in '#{p}'"
-    exit 1
+  p_name = File.basename(p, ".rb")
+  class_name = p_name.camelize
+  if BOT_PLUGINS_BLACKLIST.include?(p_name)
+    nil
+  else
+    require p
+    begin
+     Object.const_get(class_name)
+    rescue
+      "Camelized class '#{class_name}' not found in '#{p}'".die
+    end
   end
-end
-
-########################################################################
-#                               MAIN BOT                               #
-########################################################################
-
-channels = Array.new(ARGV).map{|p| "##{p}"}
-channels.uniq!
-
-if channels.empty?
-  STDERR.puts ":: Error: No channel specified"
-  exit 1
-end
+end.compact
 
 bot = Cinch::Bot.new do
   configure do |c|
@@ -46,4 +50,7 @@ bot = Cinch::Bot.new do
   end
 end
 
+bot.loggers.level, bot.loggers.first.level = :warn, :warn
 bot.start
+
+BOT_LOGGER.close

@@ -7,6 +7,8 @@
 class UserMonitor
   include Cinch::Plugin
 
+  set :help => "Plugin is a buggy plugin. It doesn't work at all."
+
   listen_to :connect, method: :on_connect
   listen_to :online,  method: :on_online
   #listen_to :offline, method: :on_offline
@@ -16,7 +18,8 @@ class UserMonitor
   # end
 
   def on_connect(m)
-    User(m.user.nick).monitor
+    # BOT_LOGGER.puts "on_connect: #{m.inspect}"
+    # User(m.user.nick).monitor
   end
 
   # Say hello when someone has logged in

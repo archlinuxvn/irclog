@@ -37,4 +37,10 @@ class String
   def camelize
     self.split("::").map{|p| p.split("_").map(&:capitalize).join}.flatten.join("::")
   end
+
+  # Say the last words before exit
+  def die(ret = 1)
+    STDERR.puts ":: {self}"
+    exit ret
+  end
 end
