@@ -31,3 +31,10 @@ def tinyurl(url)
 rescue OpenURI::HTTPError
   nil
 end
+
+class String
+  # Convert foobar_test  to FooBar
+  def camelize
+    self.split("::").map{|p| p.split("_").map(&:capitalize).join}.flatten.join("::")
+  end
+end

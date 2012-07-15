@@ -4,7 +4,7 @@
 # License  : Fair license
 # Date     : 2012, Somedays (Michale Learns To Rock)
 
-class TinyURL
+class TinyUrl
   include Cinch::Plugin
 
   set :help => "Make a shorten version of an URL. Syntax: `!tinyurl <long URL>`. To send the output to someone, try `!give <someone> tinyurl <long URL>`. KNOWN BUG(S): The plugin doesn't work correctly if your URL has some special characters."

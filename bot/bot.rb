@@ -11,9 +11,18 @@ require 'cinch'
 require 'uri'
 require 'open-uri'
 
-# Load core library and all plugins
 require "#{File.dirname(__FILE__)}/lib/core.rb"
-Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].each {|file| require file }
+
+plugins = Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].map do |p|
+  require p
+  begin
+    p_name = File.basename(p, ".rb").camelize
+    Object.const_get(p_name)
+  rescue => e
+    STDERR.puts ":: Error: camelized class '#{p_name}' not found in '#{p}'"
+    exit 1
+  end
+end
 
 ########################################################################
 #                               MAIN BOT                               #
@@ -23,27 +32,17 @@ channels = Array.new(ARGV).map{|p| "##{p}"}
 channels.uniq!
 
 if channels.empty?
-  STDERR.write(":: Error: You must specify at least on channel at command line.\n")
+  STDERR.puts ":: Error: No channel specified"
   exit 1
 end
 
 bot = Cinch::Bot.new do
   configure do |c|
-    c.server = "irc.freenode.org"
-    c.port = 6697
-    c.channels = channels
+    c.server, c.ssl.use = "irc.freenode.org", true
+    c.port, c.channels = 6697, channels
     c.nick = c.user = c.realname = BOT_NAME
     c.prefix = /^!/
-    c.ssl.use = true
-    c.plugins.plugins = [
-        Hello,
-        Sensor,
-        UserMonitor,
-        TinyURL,
-        Info,
-        Give,
-        Bot,
-      ]
+    c.plugins.plugins = plugins
   end
 end
 
