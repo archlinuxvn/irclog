@@ -55,7 +55,7 @@ class Bot
     # Date   : 2012 July 15th
     def _reload_plugin(bot, args)
       plugin_name = args.downcase
-      return "Plugin name must be specified" if plugin_name.empty?
+      return "Plugin name must be specified" if plugin_name.empty? or not plugin_name.match(/^[0-9a-z_]+$/)
       return "Plugin is in the black list" if BOT_PLUGINS_BLACKLIST.include?(plugin_name)
 
       plugin_path = File.join(File.dirname(__FILE__), "#{plugin_name}.rb")
