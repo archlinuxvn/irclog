@@ -53,7 +53,7 @@ class Bot
     # WARNING: Update the source tree in remote!!!
     def _src_update(key)
       rc = begin
-        YAML::load_file(File.join(ENV["HOME"]), "etc/archlinuxvn.yaml"))
+        YAML::load_file(File.join(ENV["HOME"], "etc/archlinuxvn.yaml"))
       rescue; nil
       end
       if rc and rc[:irclog] and rc[:irclog][:pull] and rc[:irclog][:pull][:key]
