@@ -4,6 +4,8 @@
 # License  : Fair license
 # Date     : 2012, Somedays (Michale Learns To Rock)
 
+require 'yaml'
+
 class Bot
   include Cinch::Plugin
 
@@ -34,7 +36,10 @@ class Bot
           else
             if gs = args.match(/^reload ([^ ]+)/)
               p_name = gs[1].strip
-              Bot::_reload_plugin(@bot, p_name) if _cache_expired?(:bot_plugin_reload, p_name)
+              Bot::_reload_plugin(@bot, p_name) if _cache_expired?(:bot_plugin, "reload #{p_name}")
+            elsif gs =  args.match(/^pull (.*)/)
+              secret_key = gs[1].strip
+              Bot::_src_update(secret_key)  if _cache_expired?(:bot_plugin, "src_update")
             else
               nil
             end
@@ -45,6 +50,23 @@ class Bot
   end
 
   class << self
+    # WARNING: Update the source tree in remote!!!
+    def _src_update(key)
+      rc = begin
+        YAML::load_file(File.join(ENV["HOME"]), "etc/archlinuxvn.yaml"))
+      rescue; nil
+      end
+      if rc and rc[:irclog] and rc[:irclog][:pull] and rc[:irclog][:pull][:key]
+        if key == rc[:irclog][:pull][:key]
+          %x{git pull origin master}.strip
+        else
+          "Invalid key"
+        end
+      else
+        "Resource file not found"
+      end
+    end
+
     # List all available plugins
     def _list_plugins(bot)
       bot.config.plugins.plugins.map(&:to_s)
