@@ -12,7 +12,7 @@ www/irclogs/.htpasswd: htpasswd   # create file for basic authentication
 
 tuxfamily:                         # upload web logs to tuxfamily server
 	@echo ":: Uploading log files to tuxfamily"
-	@rsync -rapve 'ssh -i /home/pi/.ssh/tux2' \
+	@rsync -rape 'ssh -i /home/pi/.ssh/tux2' \
 		--delete ./www/irclogs/ $(_RD_TUXFAMILY)
 
 tidylog:                       # convert raw logs file into the web form
