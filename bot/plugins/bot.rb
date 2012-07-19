@@ -104,6 +104,7 @@ class Bot
 
         if plugin_class
           bot.plugins.register_plugin(plugin_class)
+          bot.config.plugins.plugins |= [plugin_class]
           return "Plugin '#{plugin_name}' reloaded"
         else
           return "Plugin '#{plugin_name}' not loaded"
