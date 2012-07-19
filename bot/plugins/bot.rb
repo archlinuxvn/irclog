@@ -33,7 +33,7 @@ class Bot
         case args
           when "list" then
             Bot::_list_plugins(@bot).join(", ") \
-              + " (to use with `!help`, use lowercase as in `!help tinyurl`. To `reload`, use non-camelized form in `!bot plugin reload tiny_url`)"
+              + " (to get help, use lowercase as in `!help tinyurl`. To `reload`, use non-camelized form as in `!bot plugin reload tiny_url`)"
           else
             if gs = args.match(/^reload ([^ ]+)/)
               p_name = gs[1].strip
