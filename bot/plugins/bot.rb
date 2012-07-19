@@ -2,7 +2,7 @@
 # Author   : ArchLinuxVn
 # Developer: Anh K. Huynh
 # License  : Fair license
-# Date     : 2012, Somedays (Michale Learns To Rock)
+# Date     : 2012, Somedays (Michael Learns To Rock)
 
 require 'yaml'
 require 'digest/sha1'
