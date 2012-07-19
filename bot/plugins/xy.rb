@@ -15,15 +15,19 @@ class Xy
     flag = flag.strip.downcase
     flag = "bua" if flag.match(/^b.a$/)
     flag = "keo" if flag.match(/^k.o$/)
-    bot_flag   = %{bua bao keo}[rand(3)]
-    user_index = %{bua keo bao bua}.index(flag)
-    bot_index  = %{bua keo bao bua}.index(bot_flag)
-    distance = (user_index - bot_index).abs
-    ret = case distance
-      when 0,3 then "draw!"
-      when 1 then user_index < bot_index ? "You win" : "You loose"
-      when 2 then user_index > bot_index ? "You win" : "You loose"
-      else  "Oops, the bot is buggy. You win!"
+    bot_flag   = %w{bua bao keo}[rand(3)]
+    user_index = %w{bua keo bao bua}.index(flag)
+    bot_index  = %w{bua keo bao bua}.index(bot_flag)
+    if user_index
+      distance = (user_index - bot_index).abs
+      ret = case distance
+        when 0,3 then "draw!"
+        when 1 then user_index < bot_index ? "You win" : "You loose by my '#{bot_flag}'"
+        when 2 then user_index > bot_index ? "You win" : "You loose by my '#{bot_flag}'"
+        else  "Oops, the bot is buggy. You win!"
+      end
+    else
+      ret = "Do you try to trick the bot?"
     end
     m.reply "#{m.user.nick}: #{ret}"
   end
