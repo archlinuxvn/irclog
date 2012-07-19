@@ -5,6 +5,7 @@
 # Date     : 2012, Somedays (Michale Learns To Rock)
 
 require 'yaml'
+require 'digest/sha1'
 
 class Bot
   include Cinch::Plugin
@@ -57,7 +58,7 @@ class Bot
       rescue; nil
       end
       if rc and rc[:irclog] and rc[:irclog][:pull] and rc[:irclog][:pull][:key]
-        if key == rc[:irclog][:pull][:key]
+        if Digest::SHA1.hexdigest(key) == rc[:irclog][:pull][:key]
           %x{git pull origin master}.strip
         else
           "Invalid key"
