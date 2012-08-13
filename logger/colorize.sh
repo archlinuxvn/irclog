@@ -20,6 +20,7 @@ _C_SED="$(cat "$_F_INPUT" \
         -e "s#^@##g" \
   | grep -E "[a-z0-9]" \
   | sort -u \
+  | sed -e "s!#!\\\\#!g" \
   | awk -vFREQ=$_FREQ '{printf("-e \"s#\\([ @~!]\\)\\(%s_*\\>\\)#\\1<span style=\\\"color:rgb\\(%d,%d,%d\\)\\\">\\2</span>#g\" ", $0, 128 + 127*sin(NR*0.6), 128 + 127*sin(NR*0.6+2), 128 + 127*sin(NR*0.6 +4))}')"
 
 {
