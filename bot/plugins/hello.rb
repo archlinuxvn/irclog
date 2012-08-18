@@ -16,9 +16,9 @@ class Hello
 
   def listen(m)
     text = nil
-    if gs = m.message.match(/^hello[\t ,]*([^\t ]+)/i)
-      text = gs[1]
-    elsif gs = m.message.match(/^([^ ]: hello)/i)
+    if gs = m.message.strip.match(/^(hi|hello|ch.o)[\t ,].*([^\t ]+)$/i)
+      text = gs[2]
+    elsif gs = m.message.strip.match(/^([^ ]): (hi|ch.o|hello)$/i)
       text = gs[1]
     end
 
