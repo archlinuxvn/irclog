@@ -9,9 +9,9 @@
 
 cd archives \
 && {
-  for f in archlinuxvn; do
+  for f in archlinuxvn m1.archlinuxvn; do
     if [[ "$f" == "m1.archlinuxvn" ]]; then
-      # gunzip ./$f.log.gz
+      gunzip ./$f.log.gz
       rm -f ./$f.log.gz
     elif [[ -f ./$f.log.gz ]]; then
       echo ":: Decompressing $f.log.gz"
@@ -23,7 +23,7 @@ cd archives \
       'm1.archlinuxvn')  _R_="irc.archlinuxvn.m1" ;;
     esac
     echo ":: Info: Transferring file from $_R_"
-    rsync -avessh --progress "${_R_}:~/irclogs/freenode/\#archlinuxvn.log" $f.log
+    rsync -aessh --progress "${_R_}:~/irclogs/freenode/\#archlinuxvn.log" $f.log
     gzip $f.log
   done
 }
