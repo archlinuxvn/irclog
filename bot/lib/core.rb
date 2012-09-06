@@ -40,7 +40,7 @@ class String
 
   # Say the last words before exit
   def die(ret = 1)
-    STDERR.puts ":: {self}"
+    STDERR.puts ":: #{self}"
     exit ret
   end
 end
