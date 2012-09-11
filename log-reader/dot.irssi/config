@@ -271,9 +271,9 @@ statusbar = {
 };
 settings = {
   core = {
-    real_name = "Anh";
-    user_name = "bot_ka";
-    nick = "bot_ka";
+    real_name = "IRC Log Reader";
+    user_name = "archlinuxvn";
+    nick = "_avn_logger_";
     rawlog_lines = "10000000";
     log_timestamp = "%Y-%m-%d %H:%S  ";
   };
