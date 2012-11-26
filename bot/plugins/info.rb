@@ -15,6 +15,7 @@ class Info
     text = case section
       when "home"   then "http://archlinuxvn.org/"
       when "list"   then "http://archlinuxvn.org/vn/lists/"
+      when "lists"  then "http://archlinuxvn.org/vn/lists/"
       when "bot"    then "http://archlinuxvn.org/vn/bot/"
       when "repo"   then "http://github.com/archlinuxvn/"
       when "botsrc" then "http://github.com/archlinuxvn/irclog/"
