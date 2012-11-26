@@ -13,11 +13,12 @@ class Info
 
   def bot_info(m, section)
     text = case section
-      when "home"   then "http://archlinuxvn.tuxfamily.org/"
-      when "list"   then "http://groups.google.com/group/archlinuxvn"
+      when "home"   then "http://archlinuxvn.org/"
+      when "list"   then "http://archlinuxvn.org/vn/lists/"
+      when "bot"    then "http://archlinuxvn.org/vn/bot/"
       when "repo"   then "http://github.com/archlinuxvn/"
       when "botsrc" then "http://github.com/archlinuxvn/irclog/"
-      else nil
+      else               "http://archlinuxvn.org/#{section}"
     end
     m.reply "#{m.user.nick}: #{text}" if text
   end
