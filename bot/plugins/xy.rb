@@ -22,8 +22,8 @@ class Xy
       distance = (user_index - bot_index).abs
       ret = case distance
         when 0,3 then "draw!"
-        when 1 then user_index < bot_index ? "You win" : "You loose by my '#{bot_flag}'"
-        when 2 then user_index > bot_index ? "You win" : "You loose by my '#{bot_flag}'"
+        when 1 then user_index < bot_index ? "You win" : "You loose ('#{bot_flag}')"
+        when 2 then user_index > bot_index ? "You win" : "You loose ('#{bot_flag}')"
         else  "Oops, the bot is buggy. You win!"
       end
     else
