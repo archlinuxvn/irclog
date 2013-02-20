@@ -12,6 +12,7 @@ class Bot
 
   set :help => "Query bot information. Syntax: `!bot <cmd>`, where `<cmd>` is `uptime`, `uname`, `save` or `plugin`. To list all available plugins, try `!bot plugin list`. To reload a plugin, try `!bot plugin reload <plugin_name>`. To test connection between you and the bot , use `!ping`. To test the bot, please send private message to bot. To fix the bot's behavior, check its source code at http://github.com/archlinuxvn/irclog."
 
+  # match /bot/,                :method => :help_user
   match /bot ([^ ]+)(.*)/,    :method => :give_bot_info
   match /ping/,               :method => :ping_pong
   match /help$/,              :method => :help_user
