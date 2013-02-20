@@ -4,7 +4,6 @@
 # License  : Fair license
 # Date     : 2013 Feb 21st sleepless night
 
-
 class Nutshell
   include Cinch::Plugin
 
