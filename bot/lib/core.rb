@@ -1,24 +1,13 @@
-# Global variable
-# FIXME: flush the CACHE after sometime. Otherwise, the system would run
-# FIXME: out of the memory :) Check with garbage collection.
-# FIXME: This is not good way to place global variables
-BOT_NAME       = "archl0n0xvn"
-BOT_CACHE      = {}
-BOT_CACHE_TIME = 600 # 600 seconds aka 10 minutes
-BOT_RC         = {}
-BOT_RC_FILE    = File.join(ENV["HOME"], "etc/archlinuxvn.yaml")
-BOT_NUTSHELL   = 100 # Default number of nutshells of all people
-
 # First event: old val. in the past : expired, allow
 # Next  event: now - old > PERM     : expired, allow
 # Next  event: now - old < PERM     : not expired, not allowed
-def _cache_expired?(section, key)
+def _cache_expired?(section, key, cache_time = BOT_CACHE_TIME)
   now = Time.now
   BOT_CACHE[section]      ||= {}
   if not BOT_CACHE[section][key]
     BOT_CACHE[section][key] = now
     true
-  elsif now - BOT_CACHE[section][key] > BOT_CACHE_TIME
+  elsif now - BOT_CACHE[section][key] > cache_time
     BOT_CACHE[section][key] = now
     true
   else
@@ -52,7 +41,7 @@ end
 def bot_rc_reload!
   rc = begin
     YAML::load_file(BOT_RC_FILE)
-  rescue
+  rescue => e
     {}
   end
   BOT_RC.merge! rc

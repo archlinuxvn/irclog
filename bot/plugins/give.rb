@@ -33,8 +33,20 @@ class Give
             ? "Sorry #{someone}. I have nothing good for you" \
             : "You've got some `#{args}` from #{m.user.nick}"
       end
+    # Give someone some nutshell
+    # For example: !give foobar 3 shells
     else
-      ""
+      if section.match(/[0-9]+/) and args.match(/(nut)?shells?/)
+        offset_score = section.to_i
+        theirs = bot_score!(someone, offset_score)
+        if theirs.is_a?(String) # For any kind of errors!
+          theirs
+        else
+          yours = bot_score!(m.user.nick, - offset_score)
+        end
+      else
+        nil
+      end
     end
 
     if text

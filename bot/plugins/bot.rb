@@ -29,7 +29,7 @@ class Bot
     text = case cmd
       when "uptime"   then %x{uptime}.strip
       when "uname"    then %x{uname -a}.strip
-      when "save"     then bot_rc_save! if _cache_expired?(:bot_save, "save_config")
+      when "save"     then bot_rc_save! if _cache_expired?(:bot_save, "save_config", 300)
       when "plugin"   then
         case args
           when "list" then

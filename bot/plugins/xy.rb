@@ -12,23 +12,46 @@ class Xy
   match /xy (.+)/,  :method => :xy_play
 
   def xy_play(m, flag)
+    unless _cache_expired?(:xy, "play", 60)
+      m.reply "Don't play too much"
+      return
+    end
+
     flag = flag.strip.downcase
     flag = "bua" if flag.match(/^b.a$/)
     flag = "keo" if flag.match(/^k.o$/)
     bot_flag   = %w{bua bao keo}[rand(3)]
     user_index = %w{bua keo bao bua}.index(flag)
     bot_index  = %w{bua keo bao bua}.index(bot_flag)
-    if user_index
-      distance = (user_index - bot_index).abs
-      ret = case distance
-        when 0,3 then "draw!"
-        when 1 then user_index < bot_index ? "You win" : "You loose ('#{bot_flag}')"
-        when 2 then user_index > bot_index ? "You win" : "You loose ('#{bot_flag}')"
-        else  "Oops, the bot is buggy. You win!"
+
+    nutshell, ret = \
+      if user_index
+        case (user_index - bot_index).abs
+          when 0,3 then Xy::_win?(0)
+          when 1   then Xy::_win?(bot_index - user_index)
+          when 2   then Xy::_win?(user_index - bot_index)
+          else     [10, "Oops, the bot is buggy"]
+        end
+      else
+        [-1, "Do you try to trick the bot?"]
       end
-    else
-      ret = "Do you try to trick the bot?"
+
+    new_score = bot_score!(m.user.nick, nutshell)
+    m.reply "#{m.user.nick}: #{ret}. Got #{nutshell}. Now have #{new_score} nutshell(s)"
+  end
+
+  class << self
+    # Return [score, message]
+    # Score > 0: Win, get a positive number of nutshells (up to 3)
+    # Score < 0: Loose, get a negative number of nutshells (up to 2)
+    def _win?(score)
+      if score > 0
+        [1 + rand(3), "You win"]
+      elsif score < 0
+        [-1 - rand(2), "You losse"]
+      else
+        [0, "Draw"]
+      end
     end
-    m.reply "#{m.user.nick}: #{ret}"
   end
 end
