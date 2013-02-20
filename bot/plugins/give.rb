@@ -37,24 +37,25 @@ class Give
     # For example: !give foobar 3 shells
     else
       if section.match(/[0-9]+/) and args.match(/(nut)?shells?/)
-        offset_score = section.to_i
-        theirs = bot_score!(someone, offset_score)
-        if theirs.is_a?(String) # For any kind of errors!
-          theirs
+        if someone.gsub(/_+$/, '') == m.user.nick.gsub(/_+$/, '')
+          "#{m.user.nick}: Give s***t to yourself!"
         else
-          yours = bot_score!(m.user.nick, - offset_score)
+          offset_score = section.to_i
+          theirs = bot_score!(someone, offset_score)
+          if theirs.is_a?(String) # For any kind of errors!
+            "#{m.user.nick}: Error happened = #{theirs}"
+          else
+            yours = bot_score!(m.user.nick, - offset_score)
+            "#{someone}: You got (#{offset_score}) nutshell(s) from #{m.user.nick}"
+          end
         end
       else
-        nil
+        "#{m.user.nick}: Unknown section = #{section}"
       end
     end
 
-    if text
-      if not text.empty?
-        m.reply "#{someone}: #{text}"
-      else
-        m.reply "#{m.user.nick}: nothing to give to #{someone}"
-      end
+    if text and not text.empty?
+      m.reply "#{text}"
     end
   end
 end
