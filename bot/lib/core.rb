@@ -61,7 +61,7 @@ end
 def bot_rc_save!
   begin
     File.open(BOT_RC_FILE, "w") do |f|
-      f.puts(YAML.dump(BOT_RC_FILE))
+      f.puts(YAML.dump(BOT_RC))
     end
     "Configuration saved"
   rescue e
