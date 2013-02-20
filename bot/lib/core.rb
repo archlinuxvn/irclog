@@ -79,5 +79,5 @@ def bot_score!(nickname, relative_score)
   BOT_RC[:score][nick] ||= BOT_NUTSHELL
   BOT_RC[:score][nick] = BOT_RC_FILE[:score][nick].to_i + relative_score
 
-  "Number of nutshells = #{BOT_RC[:score][nick]}"
+  BOT_RC[:score][nick]
 end
