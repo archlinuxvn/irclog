@@ -50,10 +50,12 @@ class String
 end
 
 def bot_rc_reload!
-  BOT_RC = begin
+  rc = begin
     YAML::load_file(BOT_RC_FILE)
-  rescue; nil
+  rescue
+    {}
   end
+  BOT_RC.merge! rc
 end
 
 def bot_rc_save!
