@@ -10,7 +10,7 @@ require 'digest/sha1'
 class Bot
   include Cinch::Plugin
 
-  set :help => "Query bot information. Syntax: `!bot <cmd>`, where `<cmd>` is `uptime`, `uname` or `plugin`. To list all available plugins, try `!bot plugin list`. To reload a plugin, try `!bot plugin reload <plugin_name>`. To test connection between you and the bot , use `!ping`. To test the bot, please send private message to bot. To fix the bot's behavior, check its source code at http://github.com/archlinuxvn/irclog."
+  set :help => "Query bot information. Syntax: `!bot <cmd>`, where `<cmd>` is `uptime`, `uname`, `save` or `plugin`. To list all available plugins, try `!bot plugin list`. To reload a plugin, try `!bot plugin reload <plugin_name>`. To test connection between you and the bot , use `!ping`. To test the bot, please send private message to bot. To fix the bot's behavior, check its source code at http://github.com/archlinuxvn/irclog."
 
   match /bot ([^ ]+)(.*)/,    :method => :give_bot_info
   match /ping/,               :method => :ping_pong
@@ -29,6 +29,7 @@ class Bot
     text = case cmd
       when "uptime"   then %x{uptime}.strip
       when "uname"    then %x{uname -a}.strip
+      when "save"     then bot_rc_save! if _cache_expired?(:bot_save, "save_config")
       when "plugin"   then
         case args
           when "list" then
@@ -53,12 +54,8 @@ class Bot
   class << self
     # WARNING: Update the source tree in remote!!!
     def _src_update(key)
-      rc = begin
-        YAML::load_file(File.join(ENV["HOME"], "etc/archlinuxvn.yaml"))
-      rescue; nil
-      end
-      if rc and rc[:irclog] and rc[:irclog][:pull] and rc[:irclog][:pull][:key]
-        if Digest::SHA1.hexdigest(key) == rc[:irclog][:pull][:key]
+      if BOT_RC and BOT_RC[:irclog] and BOT_RC[:irclog][:pull] and BOT_RC[:irclog][:pull][:key]
+        if Digest::SHA1.hexdigest(key) == BOT_RC[:irclog][:pull][:key]
           %x{git pull origin master}.strip
         else
           "Invalid key"
