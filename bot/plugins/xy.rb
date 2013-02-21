@@ -12,7 +12,7 @@ class Xy
   match /xy (.+)/,  :method => :xy_play
 
   def xy_play(m, flag)
-    unless _cache_expired?(:xy, "play", 60)
+    unless _cache_expired?(:xy, "play by #{m.user.nick}", 60)
       m.reply "Don't play too much"
       return
     end
