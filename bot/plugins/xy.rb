@@ -48,7 +48,7 @@ class Xy
       if score > 0
         [1 + rand(3), "You win"]
       elsif score < 0
-        [-1 - rand(2), "You losse"]
+        [-1 - rand(2), "You loose"]
       else
         [0, "Draw"]
       end
