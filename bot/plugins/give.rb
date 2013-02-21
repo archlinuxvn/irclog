@@ -41,12 +41,16 @@ class Give
           "#{m.user.nick}: Give s***t to yourself!"
         else
           offset_score = section.to_i
-          theirs = bot_score!(someone, offset_score)
-          if theirs.is_a?(String) # For any kind of errors!
-            "#{m.user.nick}: Error happened = #{theirs}"
+          if offset_score > bot_score!(m.user.nick, 0).to_i
+            "You can't love more than you can say..."
           else
-            yours = bot_score!(m.user.nick, - offset_score)
-            "#{someone}: You got (#{offset_score}) nutshell(s) from #{m.user.nick}"
+            theirs = bot_score!(someone, offset_score)
+            if theirs.is_a?(String) # For any kind of errors!
+              "#{m.user.nick}: Error happened = #{theirs}"
+            else
+              yours = bot_score!(m.user.nick, - offset_score)
+              "#{someone}: You got #{offset_score} nutshell(s) from #{m.user.nick}"
+            end
           end
         end
       else
@@ -54,8 +58,6 @@ class Give
       end
     end
 
-    if text and not text.empty?
-      m.reply "#{text}"
-    end
+    m.reply "#{text}" if text and not text.empty?
   end
 end
