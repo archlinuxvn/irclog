@@ -36,7 +36,7 @@ class Give
     # Give someone some nutshell
     # For example: !give foobar 3 shells
     else
-      if section.match(/[0-9]+/) and args.match(/(nut)?shells?/)
+      if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?/)
         if someone.gsub(/_+$/, '') == m.user.nick.gsub(/_+$/, '')
           "#{m.user.nick}: Give s***t to yourself!"
         else
