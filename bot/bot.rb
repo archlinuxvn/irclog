@@ -48,7 +48,7 @@ plugins = Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].map do |p|
   else
     require p
     begin
-     Object.const_get(class_name)
+      Object.const_get(class_name)
     rescue
       "Camelized class '#{class_name}' not found in '#{p}'".die
     end
