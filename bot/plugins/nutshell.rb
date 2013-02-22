@@ -7,14 +7,33 @@
 class Nutshell
   include Cinch::Plugin
 
-  set :help => "Play with your nutshells. Syntax: !nutshell <someone>"
+  set :help => "Play with your nutshells. Syntax: `!nutshell <someone>`, You can also use a short version `!ns <foobar>`. To find the richest guy use `!ns :max`."
 
   match /nutshell ([^ ]+)/,   :method => :query_nutshell
-  #match /nutshell/,              :method => :query_nutshell
+  match /ns ([^ ]+)/,   :method => :query_nutshell
 
-  def query_nutshell(m, someone )
-    someone = m.user.nick if %w{me /me}.include?(someone)
-    score = bot_score!(someone || m.user.nick, 0)
-    m.reply "#{someone} has #{score} nutshell(s)"
+  def query_nutshell(m, someone)
+    if someone == ":max"
+      ret = Nutshell::find_max
+      if ret[0] == nil
+        m.reply "#{m.user.nick}: Couldn't find the richest guy"
+      else
+        m.reply "#{m.user.nick}: The richest guy is '#{ret[0]}' with #{ret[1]} nutshells"
+      end
+    else
+      someone = m.user.nick if %w{me /me}.include?(someone)
+      score = bot_score!(someone || m.user.nick, 0)
+      m.reply "#{someone} has #{score} nutshell(s)"
+    end
+  end
+
+  class << self
+    def find_max
+      ret = [nil, 0]
+      BOT_RC[:score].each do |user,score|
+        ret = [user, score] if score > ret[1]
+      end
+      ret
+    end
   end
 end
