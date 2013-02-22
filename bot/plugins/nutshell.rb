@@ -18,7 +18,7 @@ class Nutshell
       if ret[0] == nil
         m.reply "#{m.user.nick}: Couldn't find the richest guy"
       else
-        m.reply "#{m.user.nick}: The richest guy is '#{ret[0]}' with #{ret[1]} nutshells"
+        m.reply "#{m.user.nick}: The richest guy is '#{ret[0]}' (#{ret[1]} nutshells)"
       end
     else
       someone = m.user.nick if %w{me /me}.include?(someone)
