@@ -69,7 +69,7 @@ end
 def bot_user_or_virtual_found?(nickname)
   nickname = bot_real_user(nickname)
 
-  nickname.is_a?(Symbol) \
+  (nickname.is_a?(Symbol) and nickname == :masterbank) \
     or (nickname.is_a?(String) \
         and @bot.user_list.find(nickname) \
         and true) \
