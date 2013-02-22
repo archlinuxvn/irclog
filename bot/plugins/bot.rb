@@ -87,7 +87,7 @@ class Bot
       return "Plugin '#{plugin_name}' is in the black list" if BOT_PLUGINS_BLACKLIST.include?(plugin_name)
 
       plugin_path = File.join(File.dirname(__FILE__), "#{plugin_name}.rb")
-      return "Plugin file not found #{plugin_path}" unless File.file?(plugin_path)
+      return "Plugin file not found #{plugin_name}" unless File.file?(plugin_path)
 
       # Un-register the plugin if it is loaded
       plugin_class = begin
