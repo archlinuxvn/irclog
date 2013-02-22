@@ -55,7 +55,7 @@ class Give
               end
             end
           else
-            "#{m.user.nick}: User not found or offline"
+            "#{m.user.nick}: User '#{someone}' not found or offline"
           end
         end
       else
