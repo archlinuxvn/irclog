@@ -58,15 +58,79 @@ def bot_rc_save!
   end
 end
 
+# Return a Symbol or a nickname
+def bot_real_user(nickname)
+  nickname = nickname.slice(1,nickname.size).to_sym if nickname.slice(0,1) == ":"
+  nickname
+end
+
+# Return true if user is virtual (Symbol) or online
+# FIXME: All symbol is a valid user
+def bot_user_or_virtual_found?(nickname)
+  nickname = bot_real_user(nickname)
+
+  nickname.is_a?(Symbol) \
+    or (nickname.is_a?(String) \
+        and @bot.user_list.find(nickname) \
+        and true) \
+    or false
+end
+
 # Add/remove nutshells from a user
 # FIXME: This is easily to cheat
 def bot_score!(nickname, relative_score)
-  nick = nickname.to_s.gsub(/_+$/, '')
-  return "Bad nickname #{nick}" if nick.empty?
+  nickname = bot_real_user(nickname)
+
+  nick = nickname.is_a?(String) ? nickname.to_s.gsub(/_+$/, '') : nickname
+
+  return "Bad nickname #{nick.to_s}" if nick.to_s.empty?
 
   BOT_RC[:score] = {} unless BOT_RC[:score]
-  BOT_RC[:score][nick] ||= BOT_NUTSHELL
-  BOT_RC[:score][nick] = BOT_RC[:score][nick].to_i + relative_score
 
-  BOT_RC[:score][nick]
+  # Query only available user
+  if bot_user_or_virtual_found?(nick)
+    BOT_RC[:score][nick] ||= BOT_NUTSHELL
+  end
+
+  if BOT_RC[:score][nick]
+    BOT_RC[:score][nick] = BOT_RC[:score][nick].to_i + relative_score
+    BOT_RC[:score][nick]
+  else
+    0
+  end
+end
+
+def bot_user_similar?(from,to)
+  from.to_s.gsub(/_+$/, '') == to.to_s.gsub(/_+$/, '')
+end
+
+# Amount should be positive!
+def bot_nutshell_give!(from, someone, amount = 0, params = {})
+  from = bot_real_user(from)
+  someone = bot_real_user(someone)
+
+  return bot_nutshell_give!(someone, from, amount.abs, params) if amount < 0
+
+  allow_offline = params[:allow_offline] || false
+  allow_doubt   = params[:allow_doubt] || false
+
+  if %w{me /me}.include?(someone) or bot_user_similar?(someone,from)
+    "#{from}: Give s***t to yourself!"
+  else
+    if allow_offline or (bot_user_or_virtual_found?(someone) and bot_user_or_virtual_found?(from))
+      if (not allow_doubt) and (amount > bot_score!(from, 0).to_i)
+        "#{from}: Don't have enough nutshell to give"
+      else
+        theirs = bot_score!(someone, amount)
+        if theirs.is_a?(String) # For any kind of errors!
+          "#{from}: Error happened = #{theirs}"
+        else
+          yours = bot_score!(from, - amount)
+          "#{someone}: You got #{amount} nutshell(s) from #{from}"
+        end
+      end
+    else
+      "#{from}: User '#{someone}' or '#{from}' not found or offline"
+    end
+  end
 end

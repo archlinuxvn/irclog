@@ -18,7 +18,7 @@ class Sensor
     badwords = badwords.uniq.sort
 
     if not badwords.empty? and _cache_expired?(:sensor, m.user.nick)
-      bot_score!(m.user.nick, -1)
+      bot_nutshell_give!(m.user.nick, :masterbank, 1, :allow_doubt => true)
       m.reply "#{m.user.nick}: Take it easy. Don't say #{badwords.join(", ")}"
     end
   end

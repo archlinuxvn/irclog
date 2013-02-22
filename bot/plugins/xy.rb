@@ -36,7 +36,8 @@ class Xy
         [-1, "Do you try to trick the bot?"]
       end
 
-    new_score = bot_score!(m.user.nick, nutshell)
+    bot_nutshell_give!(:masterbank, m.user.nick, nutshell, :allow_doubt => true)
+    new_score = bot_score!(m.user.nick, 0)
     m.reply "#{m.user.nick}: #{ret}. Got #{nutshell}. Now have #{new_score} nutshell(s)"
   end
 

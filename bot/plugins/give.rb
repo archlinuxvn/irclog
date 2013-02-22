@@ -37,27 +37,7 @@ class Give
     # For example: !give foobar 3 shells
     else
       if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?/)
-        if %w{me /me}.include?(someone) \
-            or someone.gsub(/_+$/, '') == m.user.nick.gsub(/_+$/, '')
-          "#{m.user.nick}: Give s***t to yourself!"
-        else
-          if @bot.user_list.find(someone)
-            offset_score = section.to_i
-            if offset_score > bot_score!(m.user.nick, 0).to_i
-              "#{m.user.nick}: You can't love more than you can say..."
-            else
-              theirs = bot_score!(someone, offset_score)
-              if theirs.is_a?(String) # For any kind of errors!
-                "#{m.user.nick}: Error happened = #{theirs}"
-              else
-                yours = bot_score!(m.user.nick, - offset_score)
-                "#{someone}: You got #{offset_score} nutshell(s) from #{m.user.nick}"
-              end
-            end
-          else
-            "#{m.user.nick}: User '#{someone}' not found or offline"
-          end
-        end
+        bot_nutshell_give!(m.user.nick, someone, section.to_i.abs)
       else
         "#{m.user.nick}: Unknown section = #{section}"
       end
