@@ -2,8 +2,7 @@
 # Author   : ArchLinuxvn
 # Developer: Anh K. Huynh
 # License  : Fair license
-# Date     : 2012, Somedays (Michael Learns To Rock)
-
+# Date     : 2013 feb 23nd
 
 class Cron
   include Cinch::Plugin
