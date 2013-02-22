@@ -41,7 +41,7 @@ class Give
             or someone.gsub(/_+$/, '') == m.user.nick.gsub(/_+$/, '')
           "#{m.user.nick}: Give s***t to yourself!"
         else
-          if bot.user_list.find(someone)
+          if @bot.user_list.find(someone)
             offset_score = section.to_i
             if offset_score > bot_score!(m.user.nick, 0).to_i
               "#{m.user.nick}: You can't love more than you can say..."
