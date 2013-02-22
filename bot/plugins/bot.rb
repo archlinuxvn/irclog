@@ -37,9 +37,12 @@ class Bot
             Bot::_list_plugins(@bot).join(", ") \
               + " (to get help, use lowercase as in `!help tinyurl`. To `reload`, use non-camelized form as in `!bot plugin reload tiny_url`)"
           else
-            if gs = args.match(/^reload ([^ ]+)/)
-              p_name = gs[1].strip
-              Bot::_reload_plugin(@bot, p_name) if _cache_expired?(:bot_plugin, "reload #{p_name}")
+            if gs = args.match(/^reload (.+)/)
+              gs[1].strip.split(/[:,; ]/).map do |p_name|
+                _cache_expired?(:bot_plugin, "reload #{p_name}") \
+                  ? Bot::_reload_plugin(@bot, p_name) \
+                  : nil
+              end.compact
             elsif gs =  args.match(/^pull (.*)/)
               secret_key = gs[1].strip
               Bot::_src_update(secret_key)  if _cache_expired?(:bot_plugin, "src_update")
@@ -49,7 +52,11 @@ class Bot
         end
       else nil
     end
-    m.reply "#{m.user.nick}: #{text}" if text
+
+    text = [text] unless text.is_a?(Array)
+    text.each do |msg|
+      m.reply "#{m.user.nick}: #{msg}" if msg
+    end
   end
 
   class << self
@@ -77,7 +84,7 @@ class Bot
     def _reload_plugin(bot, args)
       plugin_name = args.downcase
       return "Plugin name must be specified" if plugin_name.empty? or not plugin_name.match(/^[0-9a-z_]+$/)
-      return "Plugin is in the black list" if BOT_PLUGINS_BLACKLIST.include?(plugin_name)
+      return "Plugin '#{plugin_name}' is in the black list" if BOT_PLUGINS_BLACKLIST.include?(plugin_name)
 
       plugin_path = File.join(File.dirname(__FILE__), "#{plugin_name}.rb")
       return "Plugin file not found #{plugin_path}" unless File.file?(plugin_path)
