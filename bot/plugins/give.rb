@@ -7,7 +7,7 @@
 class Give
   include Cinch::Plugin
 
-  set :help => "Give something to someone. Syntax: `!give <someone> <something> <others>`. <something> may be `wiki`, `tinyurl`, `some`. When `<something>` is `some`, `<others>` may be `thanks`, `shit`, `hugs`, `kiss`, `help`."
+  set :help => "Give something to someone. Syntax: `!give <someone> <something> <others>`. <something> may be `wiki`, `tinyurl`, `some`. When `<something>` is `some`, `<others>` may be `thanks`, `shit`, `hugs`, `kiss`, `help`. If you want to give some nutshell to someone, use `!give <someone> <number> nutshell|nutshells|shell`"
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
