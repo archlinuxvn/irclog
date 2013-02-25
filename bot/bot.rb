@@ -2,7 +2,7 @@
 
 # Purpose: Provide simple bot for #archlinuxvn
 # Author : Anh K. Huynh <@archlinuxvn>
-# License: Fair license
+# License: GPLv2
 # Date   : 2012 April 05
 # NOTE   : the initial code is based on Cinch example
 

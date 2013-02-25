@@ -1,7 +1,7 @@
 # Purpose  : A simple game
 # Author   : ArchLinuxvn
 # Developer: icy
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2012 July 19th
 
 class Xy

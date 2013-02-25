@@ -1,7 +1,7 @@
 # Purpose  : Play with nutshell
 # Author   : ArchLinuxVn
 # Developer: Anh K. Huynh
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2013 Feb 21st sleepless night
 
 class Nutshell

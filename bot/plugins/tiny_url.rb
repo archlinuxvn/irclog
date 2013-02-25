@@ -1,7 +1,7 @@
 # Purpose  : Provide command !tinyurl
 # Author   : ArchLinuxvn
 # Developer: Anh K. Huynh
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2012, Somedays (Michael Learns To Rock)
 
 class TinyUrl

@@ -1,7 +1,7 @@
 # Purpose  : Send warning if user says badword(s)
 # Author   : ArchLinuxvn
 # Developer: icy, n0b0dyvn
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2012, Somedays (Michael Learns To Rock)
 
 class Sensor

@@ -2,7 +2,7 @@
 
 * Purpose: Provide some utils for the community (ArchLinuxVn)
 * Authors: ArchLinuxvn. Mulitple authors
-* License: Fair license
+* License: GPLv2
 * Date   : 2012
 
 ## List of tools

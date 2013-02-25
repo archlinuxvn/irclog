@@ -1,7 +1,7 @@
 # Purpose  : Very simple cron support
 # Author   : ArchLinuxvn
 # Developer: Anh K. Huynh
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2013 feb 23nd
 
 class Cron

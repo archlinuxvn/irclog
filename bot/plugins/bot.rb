@@ -1,7 +1,7 @@
 # Purpose  : Provide basic bot information
 # Author   : ArchLinuxVn
 # Developer: Anh K. Huynh
-# License  : Fair license
+# License  : GPL2
 # Date     : 2012, Somedays (Michael Learns To Rock)
 
 require 'yaml'

@@ -1,7 +1,7 @@
 # Purpose  : Log all activities
 # Author   : ArchLinuxVn
 # Developer: Anh K. Huynh
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2012 July 15th
 
 class Log

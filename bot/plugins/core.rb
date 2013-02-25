@@ -1,7 +1,7 @@
 # Purpose  : A fake plugin to reload core configuration
 # Author   : ArchLinuxvn
 # Developer: Anh K. Huynh
-# License  : Fair license
+# License  : GPLv2
 # Date     : 2013 feb 22nd
 
 core_path = File.join(File.dirname(__FILE__), "..", "lib", "core.rb")
