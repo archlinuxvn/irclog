@@ -53,7 +53,7 @@ def bot_rc_save!
       f.puts(YAML.dump(BOT_RC))
     end
     "Configuration saved"
-  rescue e
+  rescue => e
     "Failed to save resource, err = #{e}"
   end
 end
