@@ -1,3 +1,9 @@
+# Purpose  : Core library for bot's plugins
+# Author   : ArchLinuxvn
+# Developer: Anh K. Huynh
+# License  : GPLv2
+# Date     : 2012 2013
+
 # First event: old val. in the past : expired, allow
 # Next  event: now - old > PERM     : expired, allow
 # Next  event: now - old < PERM     : not expired, not allowed
