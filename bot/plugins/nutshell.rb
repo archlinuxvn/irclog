@@ -7,7 +7,7 @@
 class Nutshell
   include Cinch::Plugin
 
-  set :help => "Play with your nutshells. Syntax: `!nutshell <someone>`, You can also use a short version `!ns <foobar>`. To find the richest guy use `!ns :max`."
+  set :help => "Play with your nutshells. Syntax: `!nutshell <someone>`, You can also use a short version `!ns <foobar>`. To find the richest guy use `!ns :max`. To check the status of the master bank, use `!ns :masterbank`. The master bank will hold nutshells used in xy-game, and will gather nutshell from bad guys who meets sensors' condition. See more with `!help sensor`."
 
   match /nutshell ([^ ]+)/,   :method => :query_nutshell
   match /ns ([^ ]+)/,   :method => :query_nutshell

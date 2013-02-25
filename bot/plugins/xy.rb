@@ -7,7 +7,7 @@
 class Xy
   include Cinch::Plugin
 
-  set :help => "Play XY-game with the bot. To start the game, type `!xy <flag>`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`."
+  set :help => "Play XY-game with the bot. To start the game, type `!xy <flag>`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`. The winner will get a random number of nutshells (1,2 or 3). The l00s3r will have to transfer a random number of nutshell to the masterbank (1 or 2 nutshells). See `!nutshell :masterbank`."
 
   match /xy (.+)/,  :method => :xy_play
 
