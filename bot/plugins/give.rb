@@ -37,7 +37,13 @@ class Give
     # For example: !give foobar 3 shells
     else
       if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?/)
-        bot_nutshell_give!(m.user.nick, someone, section.to_i.abs)
+        section = section.to_i.abs
+        cache_name = "#{m.user.data["host"]}"
+        if _cache_expired?(:give_nutshell, cache_name, 60 * (1 + section / 10))
+          bot_nutshell_give!(m.user.nick, someone, section)
+        else
+          "#{m.user.nick}: you can't give nutshell too often"
+        end
       else
         "#{m.user.nick}: Unknown section = #{section}"
       end
