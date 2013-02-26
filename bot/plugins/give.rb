@@ -43,7 +43,7 @@ class Give
         if _cache_expired?(:give_nutshell, cache_name, 60 * time_wait)
           bot_nutshell_give!(m.user.nick, someone, section)
         else
-          "#{m.user.nick}: You can't give nutshell too often. Need to wait (1 + $/10) minutes from the last transaction."
+          "#{m.user.nick}: You can't give nutshell too often. Need to wait ($/10) minutes from the last transaction."
         end
       else
         "#{m.user.nick}: Unknown section = #{section}"
