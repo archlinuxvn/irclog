@@ -134,7 +134,11 @@ def bot_nutshell_give!(from, someone, amount = 0, params = {})
           "#{from}: Error happened = #{theirs}"
         else
           yours = bot_score!(from, - amount)
-          "#{someone}: You got #{amount} nutshell(s) from #{from}"
+          if someone == :masterbank
+            "#{from}: You've transferred #{amount} nutshell(s) to masterbank"
+          else
+            "#{someone}: You got #{amount} nutshell(s) from #{from}"
+          end
         end
       end
     else
