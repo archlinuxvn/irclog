@@ -87,6 +87,8 @@ end
 def bot_score!(nickname, relative_score)
   nickname = bot_real_user(nickname)
 
+  # This is to avoid some aliases of user.
+  # FIXME: need a better way to track user nick
   nick = nickname.is_a?(String) ? nickname.to_s.gsub(/_+$/, '') : nickname
 
   return "Bad nickname #{nick.to_s}" if nick.to_s.empty?
@@ -94,7 +96,7 @@ def bot_score!(nickname, relative_score)
   BOT_RC[:score] = {} unless BOT_RC[:score]
 
   # Query only available user
-  if bot_user_or_virtual_found?(nick)
+  if bot_user_or_virtual_found?(nickname)
     BOT_RC[:score][nick] ||= BOT_NUTSHELL
   end
 
