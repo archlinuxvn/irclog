@@ -39,7 +39,7 @@ class Give
       if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?/)
         section = section.to_i.abs
         cache_name = "#{m.user.data["host"]}"
-        time_wait = (1 + section / 10)
+        time_wait = section / 10
         if _cache_expired?(:give_nutshell, cache_name, 60 * time_wait)
           bot_nutshell_give!(m.user.nick, someone, section)
         else
