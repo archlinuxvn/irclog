@@ -36,7 +36,7 @@ class Give
     # Give someone some nutshell
     # For example: !give foobar 3 shells
     else
-      if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?( .*)?$/)
+      if section.match(/^[0-9]+$/) and gs = args.match(/(nut)?shells?( .*)?$/)
         section = section.to_i.abs
         cache_name = "#{m.user.data["host"]}"
         time_wait = section / 10
