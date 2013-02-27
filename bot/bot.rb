@@ -28,7 +28,7 @@ BOT_NUTSHELL   = 100 # Default number of nutshells of all people
 # FIXME: Logging support
 BOT_LOGGER = File.open(File.join(File.dirname(__FILE__), "var/channels.log"), "a")
 "Can't open log file 'var/channels.log' in a mode".die unless BOT_LOGGER
-BOT_LOGGER.sync = false
+BOT_LOGGER.sync = true
 
 # Plugin black list
 BOT_PLUGINS_BLACKLIST = %w{log user_monitor}
@@ -65,7 +65,7 @@ bot = Cinch::Bot.new do
   end
 end
 
-# bot.loggers.level, bot.loggers.first.level = :warn, :warn
+bot.loggers.level, bot.loggers.first.level = :warn, :warn
 bot.start
 
 BOT_LOGGER.close
