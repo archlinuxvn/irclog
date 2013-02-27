@@ -31,7 +31,7 @@ class Nutshell
     def find_max
       ret = [nil, 0]
       BOT_RC[:score].each do |user,score|
-        ret = [user, score] if score > ret[1]
+        ret = [user, score] if score > ret[1] and user != :masterbank
       end
       ret
     end
