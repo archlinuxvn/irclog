@@ -7,7 +7,7 @@
 class Xy
   include Cinch::Plugin
 
-  set :help => "Play XY-game with the bot. To start the game, type `!xy <flag>`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`. The winner will get a random number of nutshells (5, 10 or 15). The l00s3r will have to transfer a random number of nutshell to the masterbank (5 or 10 nutshells). See `!nutshell :masterbank`."
+  set :help => "Play XY-game with the bot. To start the game, type `!xy <flag>`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`. The winner will get a random number of nutshells (5, 10 or 15). The l00s3r will have to transfer a random number of nutshell to the masterbank (5, 10, 15 nutshells). See `!nutshell :masterbank`."
 
   match /xy (.+)/,  :method => :xy_play
 
@@ -46,7 +46,7 @@ class Xy
       if score > 0
         [5 * (1 + rand(3)), "You win"]
       elsif score < 0
-        [5 * (-1 - rand(2)), "You loose"]
+        [5 * (-1 - rand(3)), "You loose"]
       else
         [0, "Draw"]
       end
