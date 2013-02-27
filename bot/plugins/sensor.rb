@@ -18,7 +18,7 @@ class Sensor
     badwords = badwords.uniq.sort
 
     if not badwords.empty? and _cache_expired?(:sensor, m.user.nick)
-      bot_nutshell_give!(m.user.nick, :masterbank, 1, :allow_doubt => true)
+      bot_nutshell_give!(m.user.nick, :masterbank, 1, :allow_doubt => true, :reason => "sensor")
       m.reply "#{m.user.nick}: Take it easy. Don't say #{badwords.join(", ")}. You've transferred 1 nutshell to masterbank."
     end
   end

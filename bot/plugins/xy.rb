@@ -12,10 +12,7 @@ class Xy
   match /xy (.+)/,  :method => :xy_play
 
   def xy_play(m, flag)
-    #unless _cache_expired?(:xy, "play by #{m.user.nick}", 60)
-    #  m.reply "Don't play too much"
-    #  return
-    #end
+    return unless _cache_expired?(:xy, "play by #{m.user.nick}", 30)
 
     flag = flag.strip.downcase
     flag = "bua" if flag.match(/^b.a$/)
@@ -36,7 +33,7 @@ class Xy
         [-1, "Do you try to trick the bot?"]
       end
 
-    bot_nutshell_give!(:masterbank, m.user.nick, nutshell, :allow_doubt => true)
+    bot_nutshell_give!(:masterbank, m.user.nick, nutshell, :allow_doubt => true, :reason => "xy_play")
     new_score = bot_score!(m.user.nick, 0)
     m.reply "#{m.user.nick}: #{ret}. Got #{nutshell}. Now have #{new_score} nutshell(s)"
   end

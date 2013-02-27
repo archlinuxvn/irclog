@@ -7,7 +7,7 @@
 class Give
   include Cinch::Plugin
 
-  set :help => "Give something to someone. Syntax: `!give <someone> <something> <others>`. <something> may be `wiki`, `tinyurl`, `some`. When `<something>` is `some`, `<others>` may be `thanks`, `shit`, `hugs`, `kiss`, `help`. If you want to give some nutshell to someone, use `!give <someone> <number> nutshell|nutshells|shell`"
+  set :help => "Give something to someone. Syntax: `!give <someone> <something> <others>`. <something> may be `wiki`, `tinyurl`, `some`. When `<something>` is `some`, `<others>` may be `thanks`, `shit`, `hugs`, `kiss`, `help`. If you want to give some nutshell to someone, use `!give <someone> <number> nutshell|nutshells|shell [reason]`. The `reason` is optional but you should give that to help the bot to improve the audit process."
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
 
@@ -36,12 +36,13 @@ class Give
     # Give someone some nutshell
     # For example: !give foobar 3 shells
     else
-      if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?/)
+      if section.match(/^[0-9]+$/) and args.match(/(nut)?shells?( .*)?$/)
         section = section.to_i.abs
         cache_name = "#{m.user.data["host"]}"
         time_wait = section / 10
+        reason = gs[2].strip.to_s
         if _cache_expired?(:give_nutshell, cache_name, 60 * time_wait)
-          bot_nutshell_give!(m.user.nick, someone, section)
+          bot_nutshell_give!(m.user.nick, someone, section, :reason => reason)
         else
           "#{m.user.nick}: You can't give nutshell too often. Need to wait ($/10) minutes from the last transaction."
         end

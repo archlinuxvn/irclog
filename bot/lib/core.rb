@@ -121,6 +121,8 @@ def bot_nutshell_give!(from, someone, amount = 0, params = {})
 
   allow_offline = params[:allow_offline] || false
   allow_doubt   = params[:allow_doubt] || false
+  reason = params[:reason].to_s
+  reason = ", reason: #{reason}" unless reason.empty?
 
   if %w{me /me}.include?(someone) or bot_user_similar?(someone,from)
     "#{from}: Give s***t to yourself!"
@@ -134,7 +136,7 @@ def bot_nutshell_give!(from, someone, amount = 0, params = {})
           "#{from}: Error happened = #{theirs}"
         else
           yours = bot_score!(from, - amount)
-          BOT_LOGGER.write "#{Time.now}: Transfer #{amount} ns from '#{from}' to '#{someone}'\n"
+          BOT_LOGGER.write "#{Time.now}: Transfer #{amount} ns from '#{from}' to '#{someone}'#{reason}}\n"
           if someone == :masterbank
             "#{from}: You've transferred #{amount} nutshell(s) to masterbank"
           else
