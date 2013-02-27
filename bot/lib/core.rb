@@ -135,7 +135,7 @@ def bot_nutshell_give!(from, someone, amount = 0, params = {})
         else
           yours = bot_score!(from, - amount)
           if someone == :masterbank
-            BOG_LOGGER.puts "#{Time.now}: Transfer #{amount} ns from '#{from}' to '#{someone}'"
+            BOT_LOGGER.puts "#{Time.now}: Transfer #{amount} ns from '#{from}' to '#{someone}'"
             "#{from}: You've transferred #{amount} nutshell(s) to masterbank"
           else
             "#{someone}: You got #{amount} nutshell(s) from #{from}"
