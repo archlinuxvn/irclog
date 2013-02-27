@@ -65,7 +65,7 @@ bot = Cinch::Bot.new do
   end
 end
 
-bot.loggers.level, bot.loggers.first.level = :warn, :warn
+# bot.loggers.level, bot.loggers.first.level = :warn, :warn
 bot.start
 
 BOT_LOGGER.close
