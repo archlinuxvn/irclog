@@ -40,7 +40,7 @@ class Give
         section = section.to_i.abs
         cache_name = "#{m.user.data["host"]}"
         time_wait = section / 10
-        reason = gs[2].strip.to_s
+        reason = gs[2].to_s.strip
         if _cache_expired?(:give_nutshell, cache_name, 60 * time_wait)
           bot_nutshell_give!(m.user.nick, someone, section, :reason => reason)
         else
