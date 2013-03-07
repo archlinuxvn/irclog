@@ -18,20 +18,20 @@ class Give
     text = case section
     when "wiki" then
       wiki = args.gsub(" ", "%20")
-      wiki ? "https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
+      wiki ? "#{someone}: https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
     when "tinyurl" then
-      tinyurl(args)
+      "#{someone}: tinyurl(args)"
     when "some"
       case args
-        when "thanks" then "Thank you very much"
-        when "shit"   then "Oh, you ... s^ck"
-        when "hugs"   then "Oh, let me hold you tight"
-        when "kiss"   then "Kiss you a thousand times"
-        when "help"   then "You wanna try google instead"
+        when "thanks" then "#{someone}: Thank you very much"
+        when "shit"   then "#{someone}: Oh, you ... s^ck"
+        when "hugs"   then "#{someone}: Oh, let me hold you tight"
+        when "kiss"   then "#{someone}: Kiss you a thousand times"
+        when "help"   then "#{someone}: You wanna try google instead"
         else
           m.user.nick == someone \
-            ? "Sorry #{someone}. I have nothing good for you" \
-            : "You've got some `#{args}` from #{m.user.nick}"
+            ? "#{someone}: I have nothing good for you" \
+            : "#{someone}: You've got some `#{args}` from #{m.user.nick}"
       end
     # Give someone some nutshell
     # For example: !give foobar 3 shells
