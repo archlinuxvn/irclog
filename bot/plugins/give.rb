@@ -38,13 +38,16 @@ class Give
     else
       if section.match(/^[0-9]+$/) and gs = args.match(/(nut)?shells?( .*)?$/)
         section = section.to_i.abs
-        cache_name = "#{m.user.data["host"]}"
+        cache_name = m.user.data["host"] || "localhost"
         time_wait = section / 10
         reason = gs[2].to_s.strip
-        if _cache_expired?(:give_nutshell, cache_name, 60 * time_wait)
+        if _cache_expired?(:give_nutshell, cache_name,
+                           :cache_time => 60 * time_wait + 10,
+                           :cache_counter => 4,
+                           :cache_type => :COUNTER)
           bot_nutshell_give!(m.user.nick, someone, section, :reason => reason)
         else
-          "#{m.user.nick}: You can't give nutshell too often. Need to wait ($/10) minutes from the last transaction."
+          "#{m.user.nick}: You can't give 4 times in ($/10 minutes + 10 seconds)"
         end
       else
         "#{m.user.nick}: Unknown section = #{section}"

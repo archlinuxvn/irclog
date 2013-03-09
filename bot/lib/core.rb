@@ -7,15 +7,55 @@
 # First event: old val. in the past : expired, allow
 # Next  event: now - old > PERM     : expired, allow
 # Next  event: now - old < PERM     : not expired, not allowed
-def _cache_expired?(section, key, cache_time = BOT_CACHE_TIME)
+def _cache_expired?(section, key, args = {})
+  args = {:cache_time => BOT_CACHE_TIME,
+          :cache_type => :TIME,
+          :cache_count => 0 }.merge(args)
+
+  BOT_CACHE[section] ||= {}
   now = Time.now
-  BOT_CACHE[section]      ||= {}
-  if not BOT_CACHE[section][key]
-    BOT_CACHE[section][key] = now
-    true
-  elsif now - BOT_CACHE[section][key] > cache_time
-    BOT_CACHE[section][key] = now
-    true
+
+  case args[:cache_type]
+  when :TIME then
+    if not BOT_CACHE[section][key]
+      BOT_CACHE[section][key] = now
+      true
+    elsif now - BOT_CACHE[section][key] > args[:cache_time]
+      BOT_CACHE[section][key] = now
+      true
+    else
+      false
+    end
+  when :COUNTER then
+    shadow_key = "null_state:#{key}"
+    # If there is not cache-time recorded, or it's recorded and expired,
+    # we will increase the cache-counter.
+    #     [c c c] x [e e e e e]
+    # During the first period [c c c] we won't record cache-time.
+    # When the counter reaches its limit, we start to record cache-time.
+    if (not BOT_CACHE[section][shadow_key]) \
+        or (now - BOT_CACHE[section][shadow_key] > args[:cache_time])
+
+      if not BOT_CACHE[section][key]
+        BOT_CACHE[section][key] = 1
+        BOT_CACHE[section][shadow_key] = nil
+        true
+      # we increase the number
+      elsif BOT_CACHE[section][key] + 1 <= args[:cache_counter].to_s.to_i
+        BOT_CACHE[section][key] += 1
+        BOT_CACHE[section][shadow_key] = nil
+        true
+      # in case we reach the maxium capacity, it's time we reset our
+      # cache start time and counter. The shadow key will ensure that
+      # we will get the :not_expired in the very next call.
+      else
+        BOT_CACHE[section][key] = 0
+        BOT_CACHE[section][shadow_key] = now
+        false
+      end
+    else
+      false
+    end
   else
     false
   end
