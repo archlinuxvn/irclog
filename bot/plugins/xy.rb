@@ -12,7 +12,7 @@ class Xy
   match /xy ([^[:space:]]+)([[:space:]]+[0-9]+)?\b/,  :method => :xy_play
 
   def xy_play(m, flag, mscore)
-    # return unless _cache_expired?(:xy, "#{m.user.nick}", :cache_time => 30)
+    return unless _cache_expired?(:xy, "#{m.user.nick}", :cache_time => 30)
 
     flag = flag.strip.downcase
     flag = "bua" if flag.match(/^b.a$/)
