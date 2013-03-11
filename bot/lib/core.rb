@@ -20,7 +20,7 @@ def _cache_expired?(section, key, args = {})
     if not BOT_CACHE[section][key]
       BOT_CACHE[section][key] = now
       true
-    elsif now - BOT_CACHE[section][key] > args[:cache_time]
+    elsif now.to_i - BOT_CACHE[section][key].to_i > args[:cache_time]
       BOT_CACHE[section][key] = now
       true
     else
@@ -34,7 +34,7 @@ def _cache_expired?(section, key, args = {})
     # During the first period [c c c] we won't record cache-time.
     # When the counter reaches its limit, we start to record cache-time.
     if (not BOT_CACHE[section][shadow_key]) \
-        or (now - BOT_CACHE[section][shadow_key] > args[:cache_time])
+        or (now.to_i - BOT_CACHE[section][shadow_key].to_i > args[:cache_time])
 
       if not BOT_CACHE[section][key]
         BOT_CACHE[section][key] = 1
