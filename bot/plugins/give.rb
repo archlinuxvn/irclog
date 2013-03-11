@@ -42,12 +42,10 @@ class Give
         time_wait = section / 10
         reason = gs[2].to_s.strip
         if _cache_expired?(:give_nutshell, cache_name,
-                           :cache_time => 60 * time_wait + 10,
-                           :cache_counter => 4,
-                           :cache_type => :COUNTER)
+                           :cache_time => 60 * time_wait + 10)
           bot_nutshell_give!(m.user.nick, someone, section, :reason => reason)
         else
-          "#{m.user.nick}: You can't give 4 times in ($/10 minutes + 10 seconds)"
+          "#{m.user.nick}: You can't `give too often"
         end
       else
         "#{m.user.nick}: Unknown section = #{section}"
