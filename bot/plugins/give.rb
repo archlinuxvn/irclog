@@ -20,7 +20,7 @@ class Give
       wiki = args.gsub(" ", "%20")
       wiki ? "#{someone}: https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
     when "tinyurl" then
-      "#{someone}: tinyurl(args)"
+      "#{someone}: " + tinyurl(args).to_s
     when "some"
       case args
         when "thanks" then "#{someone}: Thank you very much"
