@@ -90,7 +90,7 @@ def bot_rc_reload!
   rescue => e
     {}
   end
-  BOT_RC.merge! rc
+  BOT_RC.merge!(rc) if rc.is_a?(Hash)
 end
 
 def bot_rc_save!
