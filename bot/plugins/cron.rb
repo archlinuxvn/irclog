@@ -20,9 +20,9 @@ class Cron
     @counter += 1
 
     # every 17 messages
-    if @counter % 10 == 0
-      ret = bot_rc_save!
-      m.reply "!!! (cron) #{ret}" if ret.match(/Failed/)
-    end
+    #if @counter % 10 == 0
+    #  ret = bot_rc_save!
+    #  m.reply "!!! (cron) #{ret}" if ret.match(/Failed/)
+    #end
   end
 end
