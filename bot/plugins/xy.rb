@@ -40,7 +40,7 @@ class Xy
           else     [10, "Oops, the bot is buggy"]
         end
       else
-        [-1, "Wanna a trick?"]
+        [-1, "Wanna trick?"]
       end
 
     bot_nutshell_give!(:masterbank, m.user.nick, nutshell, :allow_doubt => true, :reason => "xy_play")
