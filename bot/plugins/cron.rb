@@ -19,10 +19,17 @@ class Cron
   def listen(m)
     @counter += 1
 
-    # every 17 messages
-    #if @counter % 10 == 0
-    #  ret = bot_rc_save!
-    #  m.reply "!!! (cron) #{ret}" if ret.match(/Failed/)
-    #end
+    # Saving bot configuration every 50 messages + 10 minutes cache
+    if @counter % 50 == 0
+      unless _cache_expired?(:bot, "ConfigAutoSave", :cache_time => 600)
+        ret = bot_rc_save!
+        m.reply "!!! (cron) #{ret}"
+      end
+    end
+
+    # reset the counter, avoid possibly overflow issue?
+    if @counter % 1000 == 0
+      @counter = 1
+    end
   end
 end
