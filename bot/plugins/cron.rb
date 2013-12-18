@@ -21,7 +21,7 @@ class Cron
 
     # Saving bot configuration every 50 messages + 10 minutes cache
     if @counter % 50 == 0
-      unless _cache_expired?(:bot, "ConfigAutoSave", :cache_time => 600)
+      if _cache_expired?(:bot, "ConfigAutoSave", :cache_time => 600)
         ret = bot_rc_save!
         m.reply "!!! (cron) #{ret}"
       end
