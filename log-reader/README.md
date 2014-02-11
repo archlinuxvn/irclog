@@ -10,4 +10,4 @@ Configure `irssi` and provide script to start it at boot time.
 
 ## Reference
 
-* http://dragula.org/blogs/672
+* http://dragula.viettug.org/blogs/672
