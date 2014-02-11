@@ -3,3 +3,5 @@
 /channel add -auto #archlinuxvn freenode
 /channel add -auto #theslinux freenode
 /set term_charset utf-8
+/log open -targets #theslinux ~/logs/theslinux/%Y/%m/theslinux-%Y%m%d.log
+/log open -targets #archlinuxvn ~/logs/archlinuxvn/%Y/%m/archlinuxvn-%Y%m%d.log
