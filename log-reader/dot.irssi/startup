@@ -1,4 +1,5 @@
 /network add -autosendcmd "/^msg nickserv ident MYPASS;wait 2000" freenode
 /server add -auto -ssl -network freenode irc.freenode.net
 /channel add -auto #archlinuxvn freenode
+/channel add -auto #theslinux freenode
 /set term_charset utf-8
