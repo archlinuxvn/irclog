@@ -9,13 +9,11 @@ servers = (
   }
 );
 
-chatnets = {
-  freenode = { type = "IRC"; };
-};
+chatnets = { freenode = { type = "IRC"; }; };
 
 channels = (
   { name = "#archlinuxvn"; chatnet = "freenode"; autojoin = "yes"; },
-  { name = "#theslinux"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#theslinux"; chatnet = "freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -181,14 +179,17 @@ statusbar = {
 };
 settings = {
   core = {
-    real_name = "IRC Log Reader";
-    user_name = "theslinux+logger";
+    real_name = "TheSLinux IRC logger";
+    user_name = "irc";
     nick = "theslinux_logger";
     rawlog_lines = "10000000";
     log_timestamp = "%Y-%m-%d %H:%S  ";
-    autolog_path = "~/irclogs/$tag/$0-%Y%m%d.log"
   };
   "fe-text" = { actlist_sort = "refnum"; };
-  "fe-common/core" = { autolog = "yes"; term_charset = "utf-8"; };
+  "fe-common/core" = {
+    autolog = "yes";
+    term_charset = "utf-8";
+    autolog_path = "~/irclogs/$tag/$0-%Y%m%d.log";
+  };
 };
 logs = { };
