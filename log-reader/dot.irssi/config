@@ -181,7 +181,7 @@ settings = {
   core = {
     real_name = "TheSLinux IRC logger";
     user_name = "irc";
-    nick = "theslinux_logger";
+    nick = "_HOSTNAME_logger";
     rawlog_lines = "10000000";
     log_timestamp = "%Y-%m-%d %H:%S  ";
   };

@@ -5,6 +5,7 @@
 # Author:  Anh K. Huynh
 # License: Fair license
 
+sed -i -e "s/_HOSTNAME_/$(hostname)/g" ~/.irssi/config
 tmux new-session -d -s 0
 tmux new-window -t 0:1 -n 'irssi' 'irssi'
 tmux select-window -t 0:1
