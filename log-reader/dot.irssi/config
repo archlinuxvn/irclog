@@ -189,7 +189,15 @@ settings = {
   "fe-common/core" = {
     autolog = "yes";
     term_charset = "utf-8";
-    autolog_path = "~/irclogs/$tag/$0-%Y%m%d.log";
   };
+  logs = {
+    "~/logs/theslinux/%Y/%m/theslinux-%Y%m%d.log" = {
+      level = "ALL";
+      items = ( { type = "target"; name = "#theslinux"; } );
+    };
+    "~/logs/archlinuxvn/%Y/%m/archlinuxvn-%Y%m%d.log" = {
+      level = "ALL";
+      items = ( { type = "target"; name = "#archlinuxvn"; } );
+    };
 };
 logs = { };
