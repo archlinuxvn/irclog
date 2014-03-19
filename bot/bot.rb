@@ -18,7 +18,7 @@ require "#{File.dirname(__FILE__)}/lib/core.rb"
 # FIXME: flush the CACHE after sometime. Otherwise, the system would run
 # FIXME: out of the memory :) Check with garbage collection.
 # FIXME: This is not good way to place global variables
-BOT_NAME       = "l00s3r-bot"
+BOT_NAME       = "#{%x[hostname -s].strip}bot"
 BOT_CACHE      = {}
 BOT_CACHE_TIME = 600 # 600 seconds aka 10 minutes
 BOT_RC         = {}
