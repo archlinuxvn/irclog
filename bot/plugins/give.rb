@@ -19,6 +19,8 @@ class Give
     when "wiki" then
       wiki = args.gsub(" ", "%20")
       wiki ? "#{someone}: https://wiki.archlinux.org/index.php/Special:Search/#{wiki}" : nil
+    when "m" then
+      "#{someone}: (mooning)"
     when "tinyurl" then
       "#{someone}: " + tinyurl(args).to_s
     when "some"
