@@ -10,6 +10,11 @@ class Give
   set :help => "Give something to someone. Syntax: `!give <someone> <something> <others>`. <something> may be `wiki`, `tinyurl`, `some`. When `<something>` is `some`, `<others>` may be `thanks`, `shit`, `hugs`, `kiss`, `help`. If you want to give some nutshell to someone, use `!give <someone> <number> nutshell|nutshells|shell [reason]`. The `reason` is optional but you should give that to help the bot to improve the audit process."
 
   match /give ([^ ]+) ([^ ]+)(.*)/, :method => :give_something
+  match /m ([^ ]+)/, :method => :mooning
+
+  def mooning(m, someone)
+    give_something(m, someone, "m")
+  end
 
   def give_something(m, someone, section, args)
     args.strip!
