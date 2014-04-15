@@ -13,7 +13,7 @@ class Give
   match /m ([^ ]+)/, :method => :mooning
 
   def mooning(m, someone)
-    give_something(m, someone, "m", {})
+    give_something(m, someone, "m", "")
   end
 
   def give_something(m, someone, section, args)
