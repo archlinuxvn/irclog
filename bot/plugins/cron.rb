@@ -24,7 +24,7 @@ class Cron
       if _cache_expired?(:bot, "ConfigAutoSave", :cache_time => 600)
         ret = bot_rc_save!
         m.reply "(bot.cron) #{ret}. Message count: #{@counter}" \
-          if @counter % 1000 == 0
+          if @counter % 500 == 0
       end
     end
 
