@@ -28,8 +28,8 @@ class Bot
   def give_bot_info(m, cmd, args)
     args.strip!
     text = case cmd
-      when "uptime"   then %x{uptime}.strip
-      when "uname"    then %x{uname -a}.strip
+      when "uptime"   then %x{uptime}.strip if _cache_expired?(:bot_info, "uptime", :cache_time => 60)
+      when "uname"    then %x{uname -a}.strip if _cache_expired?(:bot_info, "uname", :cache_time => 60)
       when "save"     then bot_rc_save! if _cache_expired?(:bot_save, "save_config", :cache_time => 60)
       when "plugin"   then
         case args
