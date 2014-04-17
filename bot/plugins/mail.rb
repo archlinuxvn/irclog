@@ -26,7 +26,7 @@ class Mail
     subject = msg.gsub(/['"\\]/, '.').strip
 
     if subject.empty?
-      m.reply "#{m.user.nick}: Subject is empty!"
+      m.reply "#{m.user.nick}: Subject is empty! 5 ns will be transferred to :masterbank"
       bot_nutshell_give!(m.user.nick, :masterbank, 5, :allow_doubt => true, :reason => "mail_bad_subject")
       return
     end
@@ -41,7 +41,7 @@ class Mail
       end
     end
 
-    m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
+    m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator. 10 ns will be transferred to :masterbank."
     bot_nutshell_give!(m.user.nick, :masterbank, 10, :allow_doubt => true, :reason => "mail_sent")
   end
 end
