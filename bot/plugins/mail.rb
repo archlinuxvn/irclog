@@ -7,7 +7,7 @@
 class Mail
   include Cinch::Plugin
 
-  set :help => "Send an email to ircbot@localhosth. Price: 5 or 10 nutshells."
+  set :help => "Send an email to ircbot@localhost. Price: 5 or 10 nutshells."
 
   match /mail (.+)/, :method => :send_email
 
