@@ -12,7 +12,9 @@ class Mail
   match /mail (.+)/, :method => :send_email
 
   def send_email(m, msg)
-    if not _cache_expired?(:bot, "mail_#{bot_real_user(m.user.nick)}", :cache_time => 120)
+    real_user = bot_real_user(m.user.nick).to_s.gsub(/_+$/, '')
+
+    if not _cache_expired?(:bot, "mail_#{real_user}", :cache_time => 120)
       m.reply "#{m.user.nick}: please wait some minutes and don't spam"
       return
     end
