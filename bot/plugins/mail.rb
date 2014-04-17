@@ -36,7 +36,6 @@ class Mail
         io.puts "Message from user '#{m.user.nick}'"
         io.puts "Subject: #{msg}"
         io.puts "User information:\n"
-        io.puts m.user.inspect
         io.puts m.user.data.inspect
       end
     end
