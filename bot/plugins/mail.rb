@@ -12,12 +12,12 @@ class Mail
   match /mail (.+)/, :method => :send_email
 
   def send_email(m, msg)
-    if not _cache_expired?(:bot, "send_email", :cache_time => 120)
+    if not _cache_expired?(:bot, "mail_#{bot_real_user(m.user.nick)}", :cache_time => 120)
       m.reply "#{m.user.nick}: please wait some minutes and don't spam"
       return
     end
 
-    if bot_score!(m.user.nick, relative_score) < 10
+    if bot_score!(m.user.nick, 0) < 10
       m.reply "#{m.user.nick}: you need at least 10 nutshells to send email"
       return
     end
