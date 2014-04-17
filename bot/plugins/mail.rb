@@ -7,7 +7,7 @@
 class Mail
   include Cinch::Plugin
 
-  set :help => "Send an email to ircbot@localhost"
+  set :help => "Send an email to ircbot@localhosth. Price: 5 or 10 nutshells."
 
   match /mail (.+)/, :method => :send_email
 
@@ -17,11 +17,17 @@ class Mail
       return
     end
 
+    if bot_score!(m.user.nick, relative_score) < 10
+      m.reply "#{m.user.nick}: you need at least 10 nutshells to send email"
+      return
+    end
+
     # FIXME: pls. make sure the user string is good
     subject = msg.gsub(/['"\\]/, '.').strip
 
     if subject.empty?
       m.reply "#{m.user.nick}: Subject is empty!"
+      bot_nutshell_give!(m.user.nick, :masterbank, 5, :allow_doubt => true, :reason => "mail_bad_subject")
       return
     end
 
@@ -36,5 +42,6 @@ class Mail
     end
 
     m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
+    bot_nutshell_give!(m.user.nick, :masterbank, 10, :allow_doubt => true, :reason => "mail_sent")
   end
 end
