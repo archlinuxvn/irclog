@@ -21,11 +21,11 @@ class Mail
     subject = msg.gsub(/['"\\]/, '.')
 
     Thread.new do
-      open("|mail -s '#{subject}' ircbot", 'w') do
-        puts "Message from user '#{m.user.nick}'"
-        puts "Subject: #{msg}"
-        puts "User information:\n"
-        puts m.user.inspect
+      open("|mail -s '#{subject}' ircbot", 'w') do |io|
+        io.puts "Message from user '#{m.user.nick}'"
+        io.puts "Subject: #{msg}"
+        io.puts "User information:\n"
+        io.puts m.user.inspect
       end
     end
 
