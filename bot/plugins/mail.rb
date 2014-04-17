@@ -18,17 +18,21 @@ class Mail
     end
 
     # FIXME: pls. make sure the user string is good
-    subject = msg.gsub(/['"\\]/, '.')
+    subject = msg.gsub(/['"\\]/, '.').strip
 
-    Thread.new do
-      open("|mail -s '#{subject}' ircbot", 'w') do |io|
-        io.puts "Message from user '#{m.user.nick}'"
-        io.puts "Subject: #{msg}"
-        io.puts "User information:\n"
-        io.puts m.user.inspect
+    if subject.empty?
+      m.reply "#{m.user.nick}: Subject is empty!"
+    else
+      Thread.new do
+        open("|mail -s '#{subject}' ircbot", 'w') do |io|
+          io.puts "Message from user '#{m.user.nick}'"
+          io.puts "Subject: #{msg}"
+          io.puts "User information:\n"
+          io.puts m.user.inspect
+        end
       end
-    end
 
-    m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
+      m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
+    end
   end
 end
