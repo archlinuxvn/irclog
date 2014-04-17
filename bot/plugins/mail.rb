@@ -18,11 +18,13 @@ class Mail
     end
 
     # FIXME: pls. make sure the user string is good
-    subject = msg.gsub(/['"\\]/, '')
+    subject = msg.gsub(/['"\\]/, '.')
 
     Thread.new do
       open("|mail -s '#{subject}' ircbot", 'w') do
-        puts "Message from user '#{m.user.nick}'\n\n"
+        puts "Message from user '#{m.user.nick}'"
+        puts "Subject: #{msg}"
+        puts "User information:\n"
         puts m.user.inspect
       end
     end
