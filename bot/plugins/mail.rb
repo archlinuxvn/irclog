@@ -22,18 +22,19 @@ class Mail
 
     if subject.empty?
       m.reply "#{m.user.nick}: Subject is empty!"
-    else
-      Thread.new do
-        open("|mail -s '#{subject}' ircbot", 'w') do |io|
-          io.puts "Message from user '#{m.user.nick}'"
-          io.puts "Subject: #{msg}"
-          io.puts "User information:\n"
-          io.puts m.user.inspect
-          io.puts m.user.data.inspect
-        end
-      end
-
-      m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
+      return
     end
+
+    Thread.new do
+      open("|mail -s '#{subject}' ircbot", 'w') do |io|
+        io.puts "Message from user '#{m.user.nick}'"
+        io.puts "Subject: #{msg}"
+        io.puts "User information:\n"
+        io.puts m.user.inspect
+        io.puts m.user.data.inspect
+      end
+    end
+
+    m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
   end
 end
