@@ -13,7 +13,7 @@ class Mail
 
   def send_email(m, msg)
     if not _cache_expired?(:bot, "send_email", :cache_time => 120)
-      m.reply "#{m.user.nick}: please wait some minutes"
+      m.reply "#{m.user.nick}: please wait some minutes and don't spam"
       return
     end
 
@@ -29,6 +29,6 @@ class Mail
       end
     end
 
-    m.reply "#{m.user.nick}: Message (maybe) sent. Please don't spam!"
+    m.reply "#{m.user.nick}: Message (maybe) sent to the channel operator"
   end
 end
