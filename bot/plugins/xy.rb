@@ -31,7 +31,7 @@ class Xy
     else
       stat = stat.abs
       if stat <= 5
-        bot_nutshell_give!(m.user.nick, otherbot, stat/2, :allow_doubt => true, :reason => "fight_superluser")
+        bot_nutshell_give!(m.user.nick, otherbot, stat, :allow_doubt => true, :reason => "fight_superluser")
         m.reply "#{m.user.nick}: You lost #{stat} shells. Feeling lucky?"
       else
         bot_nutshell_give!(m.user.nick, otherbot, 5, :allow_doubt => true, :reason => "fight_superluser")
