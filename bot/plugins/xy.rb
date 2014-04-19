@@ -25,7 +25,7 @@ class Xy
     if stat > 0
       bot_nutshell_give!(otherbot, m.user.nick, stat/2, :allow_doubt => true, :reason => "fight_superluser")
       bot_nutshell_give!(otherbot, BOT_NAME, stat - stat/2, :allow_doubt => true, :reason => "fight_superluser")
-      m.reply "#{m.user.nick}: We win. You got #{stat/2}, I got #{stat/2}"
+      m.reply "#{m.user.nick}: We win. You got #{stat/2}, I got #{stat - stat/2}"
     elsif stat == 0
       m.reply "#{m.user.nick}: Draw"
     else
