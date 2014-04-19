@@ -7,24 +7,28 @@
 class Nutshell
   include Cinch::Plugin
 
-  set :help => "Play with your nutshells. Syntax: `!nutshell <someone>`, You can also use a short version `!ns <foobar>`. To find the richest guy use `!ns :max`. To check the status of the master bank, use `!ns :masterbank`. The master bank will hold nutshells used in xy-game, and will gather nutshell from bad guys who meets sensors' condition. See more with `!help sensor`."
+  set :help => "Play with your nutshells. Syntax: `!nutshell guy [guy]...`, You can also use a short version `!ns <foobar>`. To find the richest guy use `!ns :max`. To check the status of the master bank, use `!ns :masterbank`. The master bank will hold nutshells used in xy-game, and will gather nutshell from bad guys who meets sensors' condition. See more with `!help sensor`."
 
   match /nutshell ([^ ]+)/,   :method => :query_nutshell
   match /ns ([^ ]+)/,   :method => :query_nutshell
 
-  def query_nutshell(m, someone)
-    if someone == ":max"
-      ret = Nutshell::find_max
-      if ret[0] == nil
-        m.reply "#{m.user.nick}: Couldn't find the richest guy"
+  def query_nutshell(m, guys)
+    ret = []
+    guys.split.each do |guy|
+      if guy == ":max"
+        ret = Nutshell::find_max
+        if ret[0] == nil
+          ret << ":max -> nil"
+        else
+          ret << ":max -> #{ret[0]} @ #{ret[1]} ns"
+        end
       else
-        m.reply "#{m.user.nick}: The richest guy is '#{ret[0]}' (#{ret[1]} nutshells)"
+        guy = m.user.nick if %w{me /me}.include?(guy)
+        score = bot_score!(guy || m.user.nick, 0)
+        ret << "#{guy} @ #{score} ns"
       end
-    else
-      someone = m.user.nick if %w{me /me}.include?(someone)
-      score = bot_score!(someone || m.user.nick, 0)
-      m.reply "#{someone} has #{score} nutshell(s)"
     end
+    m.reply "#{m.user.nick}: #{ret.join(", ")}" unless ret.empty?
   end
 
   class << self
