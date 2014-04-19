@@ -10,6 +10,36 @@ class Xy
   set :help => "Play XY-game with the bot. To start the game, type `!xy <flag> [<bet>]`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`. The winner will get/lost a random number of nutshells (5, 10 or 15). You can also give a bet number, for example `!xy bua 50`. The bet number should not excess 100 or your currrent number of nutshells."
 
   match /xy ([^[:space:]]+)([[:space:]]+[0-9]+)?\b/,  :method => :xy_play
+  match /fk (.+)/, :method => :fight_superluser
+
+  def fight_superluser(m, otherbot)
+    return unless _cache_expired?(:xy, "fight_superluser", :cache_time => 20)
+    return unless bot_score!(m.user.nick,0) >= 5 # FIXME
+
+    # FIXME
+    otherbot = otherbot.gsub(/_+$/, '')
+    return unless otherbot.match(/^superluser/i) and bot_user_or_virtual_found?(otherbot)
+
+    stat = rand(20) - rand(20) # yours bot vs. otherbot
+
+    if stat > 0
+      bot_nutshell_give!(otherbot, m.user.nick, stat/2, :allow_doubt => true, :reason => "fight_superluser")
+      bot_nutshell_give!(otherbot, BOT_NAME, stat - stat/2, :allow_doubt => true, :reason => "fight_superluser")
+      m.reply "#{m.user.nick}: We win. You got #{stat/2}, I got #{stat/2}"
+    elsif stat == 0
+      m.reply "#{m.user.nick}: Draw"
+    else
+      stat = stat.abs
+      if stat <= 5
+        bot_nutshell_give!(m.user.nick, otherbot, stat/2, :allow_doubt => true, :reason => "fight_superluser")
+        m.reply "#{m.user.nick}: You lost #{stat} shells. Feeling lucky?"
+      else
+        bot_nutshell_give!(m.user.nick, otherbot, 5, :allow_doubt => true, :reason => "fight_superluser")
+        bot_nutshell_give!(BOT_NAME, otherbot, stat - 5, :allow_doubt => true, :reason => "fight_superluser")
+        m.reply "#{m.user.nick}: You lost 5 shells, I lost #{stat - 5} shell(s). Better luck next time!"
+      end
+    end
+  end
 
   def xy_play(m, flag, mscore)
     return unless _cache_expired?(:xy, "#{m.user.nick}", :cache_time => 10)
