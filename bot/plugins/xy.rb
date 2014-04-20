@@ -12,7 +12,7 @@ class Xy
   match /xy ([^[:space:]]+)([[:space:]]+[0-9]+)?\b/,  :method => :xy_play
   match /fk (.+)/, :method => :fight_superluser
 
-  # A war between bots. The two bots are neutral, and they accepts
+  # A war between bots. The two bots are neutral, and they accept
   # any kind of fights. We do not need to fight the BOT_NAME, because
   # the main game (xy) does the same thing.
   # TODO: add ability that allows users to fight each other :)
