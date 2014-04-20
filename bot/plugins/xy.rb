@@ -12,11 +12,15 @@ class Xy
   match /xy ([^[:space:]]+)([[:space:]]+[0-9]+)?\b/,  :method => :xy_play
   match /fk (.+)/, :method => :fight_superluser
 
+  # A war between bots. The two bots are neutral, and they accepts
+  # any kind of fights. We do not need to fight the BOT_NAME, because
+  # the main game (xy) does the same thing.
+  # TODO: add ability that allows users to fight each other :)
   def fight_superluser(m, otherbot)
     return unless _cache_expired?(:xy, "fight_superluser", :cache_time => 20)
     return unless bot_score!(m.user.nick,0) >= 5 # FIXME
 
-    # FIXME
+    # FIXME: Add alias to fight BOT_NAME
     otherbot = otherbot.gsub(/_+$/, '')
     return unless otherbot.match(/^superluser/i) and bot_user_or_virtual_found?(otherbot)
 
