@@ -18,18 +18,11 @@ class Cron
 
   def listen(m)
     @counter += 1
-
-    # Saving bot configuration every 50 messages + 10 minutes cache
     if @counter % 100 == 0
       ret = bot_rc_save!
       if @counter % 500 == 0
         m.reply "(bot.cron) #{ret}. Message count: #{@counter}"
       end
     end
-
-    # reset the counter, avoid possibly overflow issue?
-    #if @counter % 1000 == 0
-    #  @counter = 1
-    #end
   end
 end
