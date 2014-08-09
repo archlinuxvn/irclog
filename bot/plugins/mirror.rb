@@ -27,7 +27,7 @@ class Mirror
       return
     end
 
-    json_data = %x[curl -s #{url}]
+    json_data = %x[curl -A "bot/#{BOT_NAME}" -s #{url}]
     begin
       status = JSON.parse(json_data)
     rescue => e
