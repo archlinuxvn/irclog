@@ -41,7 +41,7 @@ class Mirror
         sprintf("updated %s; packages: %d (64), %d (32), %d (any); size: %s", \
           status["report_time"], status["number_of_packages_x86_64"],
           status["number_of_packages_i686"], status["number_of_packages_any"],
-          status["number_of_packages_x86_64"])
+          status["repo_total_size_in_name"])
     end
 
     m.reply "#{m.user.nick}: #{echo}"
