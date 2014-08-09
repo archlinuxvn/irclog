@@ -22,7 +22,7 @@ class Mirror
     real_user = bot_real_user(m.user.nick).to_s.gsub(/_+$/, '')
     url = "http://f.archlinuxvn.org/archlinux/status.json"
 
-    if not _cache_expired?(:mirror, "#{real_user}", :cache_time => 65)
+    if not _cache_expired?(:mirror, "#{real_user}.#{msg}", :cache_time => 65)
       m.reply "#{m.user.nick}: please wait some seconds..."
       return
     end
