@@ -21,13 +21,14 @@ class Mirror
   def mirror_status(m, msg)
     real_user = bot_real_user(m.user.nick).to_s.gsub(/_+$/, '')
     url = "http://f.archlinuxvn.org/archlinux/status.json"
+    fpt = "http://mirror-fpt-telecom.fpt.net/archlinux/lastsync"
 
     if not _cache_expired?(:mirror, "#{real_user}.#{msg}", :cache_time => 65)
       m.reply "#{m.user.nick}: please wait some seconds..."
       return
     end
 
-    json_data = %x[curl -A "bot/#{BOT_NAME}" -s #{url}]
+    json_data = %x[curl --connect-timeout 3 -A "bot/#{BOT_NAME}" -s #{url}]
     begin
       status = JSON.parse(json_data)
     rescue => e
@@ -35,16 +36,20 @@ class Mirror
       return
     end
 
+    fpt_lastsync_i = %x[curl --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
+    fpt_lastsync_s = Time.at(fpt_lastsync_i).strftime("%Y%m%d-%H%M%S")
+
     echo = case msg.strip
       when "config" then status["mirror_config"]
       when "status" then
-        sprintf("updated %s(up %s); packages: %s (64), %s (32), %s (any); size: %s", \
+        sprintf("updated %s(up %s); packages: %s (64), %s (32), %s (any); size: %s; FPT updated: %s", \
           status["report_time"],
           status["number_of_updated_packages"],
           status["number_of_packages_x86_64"],
           status["number_of_packages_i686"],
           status["number_of_packages_any"],
-          status["repo_total_size_in_name"])
+          status["repo_total_size_in_name"],
+          fpt_lastsync_s)
     end
 
     m.reply "#{m.user.nick}: #{echo}"
