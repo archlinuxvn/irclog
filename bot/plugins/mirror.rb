@@ -42,7 +42,7 @@ class Mirror
     echo = case msg.strip
       when "config" then status["mirror_config"]
       when "status" then
-        sprintf("updated %s(up %s); packages: %s (64), %s (32), %s (any); size: %s; FPT updated %s", \
+        sprintf("updated %s (up %s); packages: %s (64), %s (32), %s (any); size: %s; FPT updated %s", \
           status["report_time"],
           status["number_of_updated_packages"],
           status["number_of_packages_x86_64"],
