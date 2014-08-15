@@ -37,12 +37,12 @@ class Mirror
     end
 
     fpt_lastsync_i = %x[curl --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
-    fpt_lastsync_s = Time.at(fpt_lastsync_i).strftime("%Y%m%d-%H%M%S")
+    fpt_lastsync_s = Time.at(fpt_lastsync_i).localtime("+07:00").strftime("%Y%m%d-%H%M%S")
 
     echo = case msg.strip
       when "config" then status["mirror_config"]
       when "status" then
-        sprintf("updated %s(up %s); packages: %s (64), %s (32), %s (any); size: %s; FPT updated: %s", \
+        sprintf("updated %s(up %s); packages: %s (64), %s (32), %s (any); size: %s; FPT updated %s", \
           status["report_time"],
           status["number_of_updated_packages"],
           status["number_of_packages_x86_64"],
