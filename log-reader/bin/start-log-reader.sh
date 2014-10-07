@@ -22,6 +22,7 @@ fi
 # Disable loggers on some nodes.
 if [ "$_HOSTNAME" = "l00s7r" -o "$_HOSTNAME" = "l00s5r" ]; then
   sed -i -e '/archlinuxvn/d' ~/.irssi/startup
+  sed -i -e '/#archlinuxvn/d' ~/.irssi/config
 fi
 
 # Kill all previous session (if any)
