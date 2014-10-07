@@ -5,16 +5,23 @@
 # Author:  Anh K. Huynh
 # License: Fair license
 
+export _HOSTNAME="$(hostname -s)"
+
 # Change irrsi username according to the hostname
 sed -i \
-  -e "s/_HOSTNAME_/$(hostname)/g" \
+  -e "s/_HOSTNAME_/$_HOSTNAME/g" \
   ~/.irssi/config
 
 # On l00s5r, we doesn't save any log
-if [[ "$(hostname)" == "l00s5r" ]]; then
+if [[ "$_HOSTNAME" == "l00s5r" ]]; then
   sed -i -e '/\log open/d' ~/.irssi/startup
   sed -i -e '$ a/log open -targets #theslinux   /dev/null' ~/.irssi/startup
   sed -i -e '$ a/log open -targets #archlinuxvn /dev/null' ~/.irssi/startup
+fi
+
+# Disable loggers on some nodes.
+if [[ "$_HOSTNAME" == "l00s7r" || "$_HOSTNAME" == "l00s5r" ]]; then
+  sed -i -e '/archlinuxvn/d' ~/.irssi/startup
 fi
 
 # Kill all previous session (if any)
