@@ -20,7 +20,7 @@ if [[ "$_HOSTNAME" == "l00s5r" ]]; then
 fi
 
 # Disable loggers on some nodes.
-if [[ "$_HOSTNAME" == "l00s7r" || "$_HOSTNAME" == "l00s5r" ]]; then
+if [ "$_HOSTNAME" == "l00s7r" -o "$_HOSTNAME" == "l00s5r" ]; then
   sed -i -e '/archlinuxvn/d' ~/.irssi/startup
 fi
 
