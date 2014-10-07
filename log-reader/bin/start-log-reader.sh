@@ -13,7 +13,7 @@ sed -i \
   ~/.irssi/config
 
 # On l00s5r, we doesn't save any log
-if [[ "$_HOSTNAME" == "l00s5r" ]]; then
+if [ "$_HOSTNAME" == "l00s5r" ]; then
   sed -i -e '/\log open/d' ~/.irssi/startup
   sed -i -e '$ a/log open -targets #theslinux   /dev/null' ~/.irssi/startup
   sed -i -e '$ a/log open -targets #archlinuxvn /dev/null' ~/.irssi/startup
