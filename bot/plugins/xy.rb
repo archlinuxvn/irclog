@@ -7,7 +7,7 @@
 class Xy
   include Cinch::Plugin
 
-  set :help => "Play XY-game with the bot. To start the game, type `!xy <flag> [<bet>]`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`. The winner will get/lost a random number of nutshells (5, 10 or 15). You can also give a bet number, for example `!xy bua 50`. The bet number should not excess 100 or your currrent number of nutshells."
+  set :help => "Play XY-game with the bot. To start the game, type `!xy <flag> [<bet>]`, where `<flag>` is `bao`, `keo`, `bua`. The bot will randomly choose its flag and find the winner. The rule is very simple: `bua > keo > bao > bua`. The winner will get/lost a random number of nutshells (5, 10 or 15). You can also give a bet number, for example `!xy bua 50`. The bet number should not excess your current number of nutshells."
 
   match /xy ([^[:space:]]+)([[:space:]]+[0-9]+)?\b/,  :method => :xy_play
   match /fk (.+)/, :method => :fight_superluser
