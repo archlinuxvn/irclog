@@ -5,6 +5,7 @@
 # Date     : 2014 Aug 09th
 
 require 'json'
+require 'time'
 
 class Mirror
   include Cinch::Plugin
@@ -14,42 +15,74 @@ class Mirror
   match /mirror (.+)/, :method => :mirror_status
   match /mirror$/, :method => :mirror_default
 
+  def initialize(*args)
+    super
+    @curl_data = {}
+  end
+
+  def listen(m)
+    mirror_cron(m)
+  end
+
   def mirror_default(m)
     mirror_status(m, "status")
   end
 
-  def mirror_status(m, msg)
-    real_user = bot_real_user(m.user.nick).to_s.gsub(/_+$/, '')
+  def mirror_monitor(m)
+    if gs = @curl_data["f"]["report_time"].match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
+      date, h, m, s = gs[1], gs[2], gs[3], gs[4]
+      offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, m, s))
+      if offset >= 4800 # 3600 + 1800 aka 1.5 hours
+        m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset / 60} minutes ago" \
+          unless _cache_expired(:mirror, "cron_warning", :cache_time => 1800)
+      end
+    else
+      m.reply "!! Error: Invalid curl data found" \
+        unless _cache_expired(:mirror, "cron_error", :cache_time => 1800)
+    end
+    return @curl_data
+  end
+
+  # Update data every 0.5 hour
+  def mirror_cron(m)
+    return mirror_monitor(m) \
+      if not _cache_expired?(:mirror, "cron", :cache_time => 1800)
+
     url = "http://f.archlinuxvn.org/archlinux/status.json"
     fpt = "http://mirror-fpt-telecom.fpt.net/archlinux/lastsync"
+
+    json_data = %x[curl --connect-timeout 3 -A "bot/#{BOT_NAME}" -s #{url}]
+    begin
+      @curl_data["f"] = JSON.parse(json_data)
+    rescue => e
+      @curl_data["f"] = {}
+    end
+
+    fpt_lastsync_i = %x[curl --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
+    fpt_lastsync_s = Time.at(fpt_lastsync_i).localtime("+07:00").strftime("%Y%m%d-%H%M%S")
+    @curl_data["fpt"] = fpt_lastsync_s
+
+    return mirror_monitor(m)
+  end
+
+  def mirror_status(m, msg)
+    real_user = bot_real_user(m.user.nick).to_s.gsub(/_+$/, '')
 
     if not _cache_expired?(:mirror, "#{real_user}.#{msg}", :cache_time => 65)
       m.reply "#{m.user.nick}: please wait some seconds..."
       return
     end
 
-    json_data = %x[curl --connect-timeout 3 -A "bot/#{BOT_NAME}" -s #{url}]
-    begin
-      status = JSON.parse(json_data)
-    rescue => e
-      m.reply "#{m.user.nick}: unable to fetch status from f.archlinuxvn.org"
-      return
-    end
-
-    fpt_lastsync_i = %x[curl --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
-    fpt_lastsync_s = Time.at(fpt_lastsync_i).localtime("+07:00").strftime("%Y%m%d-%H%M%S")
+    @curl_data = mirror_cron(m)
 
     echo = case msg.strip
-      when "config" then status["mirror_config"]
+      when "config" then @curl_data["mirror_config"] || "error"
       when "status" then
-        sprintf("updated %s (up %s); packages: %s (64), %s (32), %s (any); size: %s; FPT updated %s", \
-          status["report_time"],
-          status["number_of_updated_packages"],
-          status["number_of_packages_x86_64"],
-          status["number_of_packages_i686"],
-          status["number_of_packages_any"],
-          status["repo_total_size_in_name"],
-          fpt_lastsync_s)
+        sprintf("updated %s (up %s); size: %s; FPT updated %s", \
+          @curl_data["f"]["report_time"],
+          @curl_data["f"]["number_of_updated_packages"],
+          @curl_data["f"]["repo_total_size_in_name"],
+          @curl_data["fpt"])
     end
 
     m.reply "#{m.user.nick}: #{echo}"
