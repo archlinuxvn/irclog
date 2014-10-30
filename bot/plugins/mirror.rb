@@ -45,7 +45,7 @@ class Mirror
         if _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
     end
 
-    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"])
+    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
     offset = (offset / 3600).to_i
     if offset > 24
       m.reply "!! Warning: The last package is updated #{offset} hours ago" \
@@ -94,7 +94,7 @@ class Mirror
     end
 
     @curl_data = mirror_cron(m)
-    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"])
+    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
     offset = (offset / 60).to_i
 
     echo = case msg.strip
