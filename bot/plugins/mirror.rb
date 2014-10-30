@@ -38,11 +38,11 @@ class Mirror
       offset = offset.to_i
       if offset >= 90 # 90 minutes aka 1.5 hour
         m.reply "!! Warning: Mirror is out-of-sync. The last update is #{offset} minutes ago" \
-          unless _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
+          if _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
       end
     else
       m.reply "!! Error: Invalid curl data found" \
-        unless _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
+        if _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
     end
     return @curl_data
   end
@@ -88,7 +88,7 @@ class Mirror
     @curl_data = mirror_cron(m)
 
     echo = case msg.strip
-      when "config" then @curl_data["mirror_config"] || "error"
+      when "config" then @curl_data["f"]["mirror_config"] || "error"
       when "status" then
         sprintf("updated %s (up %s); size: %s; FPT updated %s", \
           @curl_data["f"]["report_time"],
