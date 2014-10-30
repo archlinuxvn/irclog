@@ -30,8 +30,8 @@ class Mirror
 
   def mirror_monitor(m)
     if gs = @curl_data["f"]["report_time"].to_s.match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
-      date, h, m, s = gs[1], gs[2], gs[3], gs[4]
-      offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, m, s))
+      date, h, min, s = gs[1], gs[2], gs[3], gs[4]
+      offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, min, s))
       if offset >= 5400 # 3600 + 1800 aka 1.5 hours
         m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset / 60} minutes ago" \
           unless _cache_expired?(:mirror, "cron_warning", :cache_time => 1800)
@@ -45,8 +45,16 @@ class Mirror
 
   # Update data every 0.5 hour
   def mirror_cron(m)
-    return mirror_monitor(m) \
-      if not _cache_expired?(:mirror, "cron", :cache_time => 1800)
+    if not _cache_expired?(:mirror, "cron", :cache_time => 1800)
+      # If @curl_data is good, we just return because we're in cache window
+      if not @curl_data["f"]["report_time"].to_s.empty?
+        return mirror_monitor(m)
+      # Otherwise, we will try to update @curl_data.
+      # However, we don't that too often. We will try after 10 minutes
+      elsif not _cache_expired?(:mirror, "cron_retry", :cache_time => 600)
+        return mirror_monitor(m)
+      end
+    end
 
     url = "http://f.archlinuxvn.org/archlinux/status.json"
     fpt = "http://mirror-fpt-telecom.fpt.net/archlinux/lastsync"
