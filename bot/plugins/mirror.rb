@@ -22,6 +22,7 @@ class Mirror
 
   def listen(m)
     mirror_cron(m)
+    mirror_monitor(m)
   end
 
   def mirror_default(m)
@@ -49,11 +50,11 @@ class Mirror
     if not _cache_expired?(:mirror, "cron", :cache_time => 1800)
       # If @curl_data is good, we just return because we're in cache window
       if not @curl_data["f"]["report_time"].to_s.empty?
-        return mirror_monitor(m)
+        return @curl_data
       # Otherwise, we will try to update @curl_data.
       # However, we don't that too often. We will try after 10 minutes
       elsif not _cache_expired?(:mirror, "cron_retry", :cache_time => 600)
-        return mirror_monitor(m)
+        return @curl_data
       end
     end
 
@@ -71,7 +72,7 @@ class Mirror
     fpt_lastsync_s = Time.at(fpt_lastsync_i).localtime("+07:00").strftime("%Y%m%d-%H%M%S")
     @curl_data["fpt"] = fpt_lastsync_s
 
-    return mirror_monitor(m)
+    return @curl_data
   end
 
   def mirror_status(m, msg)
@@ -95,5 +96,6 @@ class Mirror
     end
 
     m.reply "#{m.user.nick}: #{echo}"
+    mirror_monitor(m, :cache_time => 65)
   end
 end
