@@ -17,7 +17,7 @@ class Mirror
 
   def initialize(*args)
     super
-    @curl_data = {}
+    @curl_data = {"f" => {},"fpt" => 0}
   end
 
   def listen(m)
