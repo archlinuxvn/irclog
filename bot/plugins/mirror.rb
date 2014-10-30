@@ -34,11 +34,11 @@ class Mirror
       offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, m, s))
       if offset >= 5400 # 3600 + 1800 aka 1.5 hours
         m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset / 60} minutes ago" \
-          unless _cache_expired(:mirror, "cron_warning", :cache_time => 1800)
+          unless _cache_expired?(:mirror, "cron_warning", :cache_time => 1800)
       end
     else
       m.reply "!! Error: Invalid curl data found" \
-        unless _cache_expired(:mirror, "cron_error", :cache_time => 1800)
+        unless _cache_expired?(:mirror, "cron_error", :cache_time => 1800)
     end
     return @curl_data
   end
