@@ -12,6 +12,7 @@ class Mirror
 
   set :help => "Get mirror status (http://f.archlinuxvn.org/). Available command: status, config"
 
+  listen_to :message
   match /mirror (.+)/, :method => :mirror_status
   match /mirror$/, :method => :mirror_default
 
@@ -36,7 +37,7 @@ class Mirror
       offset = offset / 60
       offset = offset.to_i
       if offset >= 90 # 90 minutes aka 1.5 hour
-        m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset} minutes ago" \
+        m.reply "!! Warning: Mirror is out-of-sync. The last update is #{offset} minutes ago" \
           unless _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
       end
     else
