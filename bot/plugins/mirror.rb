@@ -29,7 +29,7 @@ class Mirror
   end
 
   def mirror_monitor(m)
-    if gs = @curl_data["f"]["report_time"].match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
+    if gs = @curl_data["f"]["report_time"].to_s.match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
       date, h, m, s = gs[1], gs[2], gs[3], gs[4]
       offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, m, s))
       if offset >= 5400 # 3600 + 1800 aka 1.5 hours
