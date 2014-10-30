@@ -33,9 +33,10 @@ class Mirror
     if gs = @curl_data["f"]["report_time"].to_s.match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
       date, h, min, s = gs[1], gs[2], gs[3], gs[4]
       offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, min, s))
+      offset = offset / 60
       offset = offset.to_i
-      if offset >= 5400 # 3600 + 1800 aka 1.5 hours
-        m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset / 60} minutes ago" \
+      if offset >= 90 # 90 minutes aka 1.5 hour
+        m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset} minutes ago" \
           unless _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
       end
     else
