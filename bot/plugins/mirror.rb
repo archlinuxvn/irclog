@@ -28,17 +28,18 @@ class Mirror
     mirror_status(m, "status")
   end
 
-  def mirror_monitor(m)
+  def mirror_monitor(m, cache_time = 1800)
     if gs = @curl_data["f"]["report_time"].to_s.match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
       date, h, min, s = gs[1], gs[2], gs[3], gs[4]
       offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, min, s))
+      offset = offset.to_i
       if offset >= 5400 # 3600 + 1800 aka 1.5 hours
         m.reply "!! Warning: Mirror is out-of-sync. Last update is #{offset / 60} minutes ago" \
-          unless _cache_expired?(:mirror, "cron_warning", :cache_time => 1800)
+          unless _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
       end
     else
       m.reply "!! Error: Invalid curl data found" \
-        unless _cache_expired?(:mirror, "cron_error", :cache_time => 1800)
+        unless _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
     end
     return @curl_data
   end
@@ -94,5 +95,11 @@ class Mirror
     end
 
     m.reply "#{m.user.nick}: #{echo}"
+
+    # Why here? Ok, if no one types "!mirror" command to check status
+    # the daemon will check and report every 30 minutes. However, if
+    # someone type "!mirror" command, this command will be run twice.
+    # Once when "mirror_cron" is called, and the 2nd time is here,
+    mirror_monitor(m, :cache_time => 65)
   end
 end
