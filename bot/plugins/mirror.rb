@@ -96,6 +96,6 @@ class Mirror
     end
 
     m.reply "#{m.user.nick}: #{echo}"
-    mirror_monitor(m, cache_time)
+    mirror_monitor(m, 65)
   end
 end
