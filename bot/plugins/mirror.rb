@@ -95,11 +95,5 @@ class Mirror
     end
 
     m.reply "#{m.user.nick}: #{echo}"
-
-    # Why here? Ok, if no one types "!mirror" command to check status
-    # the daemon will check and report every 30 minutes. However, if
-    # someone type "!mirror" command, this command will be run twice.
-    # Once when "mirror_cron" is called, and the 2nd time is here,
-    mirror_monitor(m, :cache_time => 65)
   end
 end
