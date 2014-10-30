@@ -58,7 +58,7 @@ class Mirror
       @curl_data["f"] = {}
     end
 
-    fpt_lastsync_i = %x[curl --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
+    fpt_lastsync_i = %x[curl -s --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
     fpt_lastsync_s = Time.at(fpt_lastsync_i).localtime("+07:00").strftime("%Y%m%d-%H%M%S")
     @curl_data["fpt"] = fpt_lastsync_s
 
