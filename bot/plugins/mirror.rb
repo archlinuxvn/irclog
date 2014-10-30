@@ -44,6 +44,14 @@ class Mirror
       m.reply "!! Error: Invalid curl data found" \
         if _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
     end
+
+    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"])
+    offset = (offset / 3600).to_i
+    if offset > 24
+      m.reply "!! Warning: The last package is updated #{offset} hours ago" \
+        if _cache_expired?(:mirror, "cron_warn_lastpkg", :cache_time => cache_time)
+    end
+
     return @curl_data
   end
 
@@ -86,13 +94,15 @@ class Mirror
     end
 
     @curl_data = mirror_cron(m)
+    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"])
+    offset = (offset / 60).to_i
 
     echo = case msg.strip
       when "config" then @curl_data["f"]["mirror_config"] || "error"
       when "status" then
-        sprintf("updated %s (up %s); size: %s; FPT updated %s", \
+        sprintf("synced @ %s (last package: %s minutes ago); size: %s; FPT synced @ %s", \
           @curl_data["f"]["report_time"],
-          @curl_data["f"]["number_of_updated_packages"],
+          offset,
           @curl_data["f"]["repo_total_size_in_name"],
           @curl_data["fpt"])
     end
