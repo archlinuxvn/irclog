@@ -27,6 +27,7 @@ class Mirror
   end
 
   def mirror_default(m)
+    mirror_cron(m)
     mirror_status(m, "status")
   end
 
@@ -108,6 +109,5 @@ class Mirror
     end
 
     m.reply "#{m.user.nick}: #{echo}"
-    mirror_monitor(m, 65)
   end
 end
