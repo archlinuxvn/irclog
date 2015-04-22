@@ -4,6 +4,8 @@
 # License  : GPLv2
 # Date     : 2014 Aug 09th
 
+# NOTE: This is a very buggy and messy plugin. It should be rewritten.
+
 require 'json'
 require 'time'
 
@@ -42,15 +44,19 @@ class Mirror
           if _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
       end
     else
-      m.reply "!! Error: Invalid curl data found" \
+      m.reply "#{m.user.nick}: Invalid curl data found" \
         if _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
     end
 
-    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
-    offset = (offset / 3600).to_i
-    if offset > 24
-      m.reply "!! Warning: The last package is updated #{offset} hours ago" \
-        if _cache_expired?(:mirror, "cron_warn_lastpkg", :cache_time => cache_time)
+    begin
+      offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
+      offset = (offset / 3600).to_i
+      if offset > 24
+        m.reply "!! Warning: The last package is updated #{offset} hours ago" \
+          if _cache_expired?(:mirror, "cron_warn_lastpkg", :cache_time => cache_time)
+      end
+    rescue
+      m.reply "#{m.user.nick}: Invalid curl data"
     end
 
     return @curl_data
@@ -94,9 +100,14 @@ class Mirror
       return
     end
 
-    @curl_data = mirror_cron(m)
-    offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
-    offset = (offset / 60).to_i
+    begin
+      @curl_data = mirror_cron(m)
+      offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
+      offset = (offset / 60).to_i
+    rescue
+      m.reply "#{m.user.nick}: Invalid curl data"
+      return
+    end
 
     echo = case msg.strip
       when "config" then @curl_data["f"]["mirror_config"] || "error"
