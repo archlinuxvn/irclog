@@ -80,7 +80,7 @@ class Mirror
             if status == "up"
               "#{mirror_name} (up)"
             else
-              "#{mirror_name} (#{status}, #{message})"
+              "#{mirror_name} (#{status})"
             end
           end.join("; ")
         end
