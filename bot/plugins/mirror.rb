@@ -52,7 +52,7 @@ class Mirror
     begin
       @curl_data = YAML.load(api_data)
     rescue => e
-      @curl_data = {"error_code": 500, "error_message": "#{e}"}
+      @curl_data = {"error_code" => 500, "error_message" => "#{e}"}
     end
 
     return @curl_data
