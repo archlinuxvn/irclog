@@ -73,13 +73,15 @@ class Mirror
         if @curl_data["error_code"].to_i > 200
           "#{m.user.nick}: The bot failed to fetch wohstatus."
         else
-          @curl_data.keys.select{|key| key.match(/mirror-/)}.map do |key|
+          statuses = @curl_data.keys.select{|key| key.match(/mirror-/)}.map do |key|
             mirror_name = key.sub(/mirror-/, '')
             status = @curl_data[key]["status"]
             message = @curl_data[key]["message"]
 
             "#{mirror_name} (#{status})"
           end.join("; ")
+
+          "#{statuses}. See also http://icy.theslinux.org/wohstatus/."
         end
     end
 
