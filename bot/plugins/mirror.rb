@@ -77,11 +77,8 @@ class Mirror
             mirror_name = key.sub(/mirror-/, '')
             status = @curl_data[key]["status"]
             message = @curl_data[key]["message"]
-            if status == "up"
-              "#{mirror_name} (up)"
-            else
-              "#{mirror_name} (#{status})"
-            end
+
+            "#{mirror_name} (#{status})"
           end.join("; ")
         end
     end
