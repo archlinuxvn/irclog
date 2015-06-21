@@ -20,7 +20,7 @@ class Mirror
 
   def initialize(*args)
     super
-    @curl_data = {"f" => {},"fpt" => 0}
+    @curl_data = {"init" => 1}
   end
 
   def listen(m)
@@ -42,8 +42,10 @@ class Mirror
 
   # Update data every 900 seconds aka 15 minutes
   def mirror_cron(m)
-    if not _cache_expired?(:mirror, "cron", :cache_time => 900)
-      return @curl_data
+    if @curl_data["init"] != 1
+      if not _cache_expired?(:mirror, "cron", :cache_time => 900)
+        return @curl_data
+      end
     end
 
     url = "http://icy.theslinux.org/wohstatus/api/status.yaml"
