@@ -12,7 +12,7 @@ require 'time'
 class Mirror
   include Cinch::Plugin
 
-  set :help => "Get mirror status (http://f.archlinuxvn.org/). Available command: status, config"
+  set :help => "Get mirror statuses. Available command: status, config. Actual data come from http://icy.theslinux.org/wohstatus/."
 
   listen_to :message
   match /mirror (.+)/, :method => :mirror_status
@@ -29,65 +29,31 @@ class Mirror
   end
 
   def mirror_default(m)
-    mirror_cron(m)
     mirror_status(m, "status")
   end
 
-  def mirror_monitor(m, cache_time = 1800)
-    if gs = @curl_data["f"]["report_time"].to_s.match(/^([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})/)
-      date, h, min, s = gs[1], gs[2], gs[3], gs[4]
-      offset = Time.now - Time.parse(sprintf("%s %s:%s:%s", date, h, min, s))
-      offset = offset / 60
-      offset = offset.to_i
-      if offset >= 90 # 90 minutes aka 1.5 hour
-        m.reply "!! Warning: Mirror is out-of-sync. The last update is #{offset} minutes ago" \
-          if _cache_expired?(:mirror, "cron_warning", :cache_time => cache_time)
+  def mirror_monitor(m, cache_time = 900)
+    if _cache_expired?(:mirror, "monitor", :cache_time => 900)
+      if @curl_data["error_code"].to_i > 200
+        m.reply "WARNING: The bot failed to fetch wohstatus. Please help to inform our sysadmins."
       end
-    else
-      m.reply "#{m.user.nick}: Invalid curl data found" \
-        if _cache_expired?(:mirror, "cron_error", :cache_time => cache_time)
     end
-
-    begin
-      offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
-      offset = (offset / 3600).to_i
-      if offset > 24
-        m.reply "!! Warning: The last package is updated #{offset} hours ago" \
-          if _cache_expired?(:mirror, "cron_warn_lastpkg", :cache_time => cache_time)
-      end
-    rescue
-      m.reply "#{m.user.nick}: Invalid curl data"
-    end
-
-    return @curl_data
   end
 
-  # Update data every 0.5 hour
+  # Update data every 900 seconds aka 15 minutes
   def mirror_cron(m)
-    if not _cache_expired?(:mirror, "cron", :cache_time => 1800)
-      # If @curl_data is good, we just return because we're in cache window
-      if not @curl_data["f"]["report_time"].to_s.empty?
-        return @curl_data
-      # Otherwise, we will try to update @curl_data.
-      # However, we don't that too often. We will try after 10 minutes
-      elsif not _cache_expired?(:mirror, "cron_retry", :cache_time => 600)
-        return @curl_data
-      end
+    if not _cache_expired?(:mirror, "cron", :cache_time => 900)
+      return @curl_data
     end
 
-    url = "http://f.archlinuxvn.org/archlinux/status.json"
-    fpt = "http://mirror-fpt-telecom.fpt.net/archlinux/lastsync"
+    url = "http://icy.theslinux.org/wohstatus/api/status.yaml"
+    api_data = %x[curl -s --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{url}].strip
 
-    json_data = %x[curl --connect-timeout 3 -A "bot/#{BOT_NAME}" -s #{url}]
     begin
-      @curl_data["f"] = JSON.parse(json_data)
+      @curl_data = YAML.load(api_data)
     rescue => e
-      @curl_data["f"] = {}
+      @curl_data = {"error_code": 500, "error_message": "#{e}"}
     end
-
-    fpt_lastsync_i = %x[curl -s --connect-timeout 3 -A "archlinuxvn/bot/#{BOT_NAME}" #{fpt}].strip.to_i
-    fpt_lastsync_s = Time.at(fpt_lastsync_i).localtime("+07:00").strftime("%Y%m%d-%H%M%S")
-    @curl_data["fpt"] = fpt_lastsync_s
 
     return @curl_data
   end
@@ -100,23 +66,24 @@ class Mirror
       return
     end
 
-    begin
-      @curl_data = mirror_cron(m)
-      offset = Time.now - Time.parse(@curl_data["f"]["the_latest_package_time"].to_s)
-      offset = (offset / 60).to_i
-    rescue
-      m.reply "#{m.user.nick}: Invalid curl data"
-      return
-    end
-
     echo = case msg.strip
-      when "config" then @curl_data["f"]["mirror_config"] || "error"
+      when "config" then
+        "See also http://f.archlinuxvn.org/config/."
       when "status" then
-        sprintf("synced @ %s (last package: %s minutes ago); size: %s; FPT synced @ %s", \
-          @curl_data["f"]["report_time"],
-          offset,
-          @curl_data["f"]["repo_total_size_in_name"],
-          @curl_data["fpt"])
+        if @curl_data["error_code"].to_i > 200
+          "#{m.user.nick}: The bot failed to fetch wohstatus."
+        else
+          @curl_data.keys.select{|key| key.match(/mirror-/)}.map do |key|
+            mirror_name = key.sub(/mirror-/, '')
+            status = @curl_data[key]["status"]
+            message = @curl_data[key]["message"]
+            if status == "up"
+              "#{mirror_name} (up)"
+            else
+              "#{mirror_name} (#{status}, #{message})"
+            end
+          end.join("; ")
+        end
     end
 
     m.reply "#{m.user.nick}: #{echo}"
